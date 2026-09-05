@@ -1,0 +1,81 @@
+generated: '2026-09-04'
+method: searched
+source: https://skills.workera.ai/api/docs
+api: Workera API
+versioning:
+  scheme: URI path major version
+  current:
+  - v1
+  - v2
+  spec_info_version: '1.0'
+  base_urls:
+  - https://skills.workera.ai/api/v1/
+  - https://skills.workera.ai/api/v2/
+  policy_published: false
+  note: >-
+    Two major versions are served side by side and documented in one OpenAPI. Scores and self-ratings
+    are v2; capabilities (domains), competency models, programs, benchmarks, ping and audit events are
+    v1. The docs state v2 "use the same authentication, rate limiting, pagination, and error handling
+    as the rest of the API." No written versioning policy, support window or version-negotiation header
+    is published.
+deprecation:
+  policy_published: false
+  sunset_header: not_documented
+  deprecation_header: not_documented
+  rfc8594: false
+  deprecated_operations: []
+  spec_deprecated_flags: 0
+  observed_supersessions:
+  - superseded: score_updated webhook event
+    replacement: assessment_completed webhook event
+    statement: >-
+      The docs describe `assessment_completed` as "the v2 replacement for `score_updated`, using a flat
+      payload structure with topic-level skill ratings and behaviors."
+    retirement_date: not_published
+    note: >-
+      Both events remain documented and configurable. This is the only supersession Workera names, and
+      it carries no sunset date, so integrators cannot plan a migration from published material.
+  gap: >-
+    No Deprecation or Sunset response headers, no deprecation policy page, and no `deprecated: true` on
+    any operation or schema in the OpenAPI. No `Deprecation` pointer is emitted in apis.yml because none
+    of these exist.
+stability:
+  forward_compatibility_statement: >-
+    For the `assessment_started` event the docs state: "The field set for assessment_started is
+    intentionally open, not frozen. Additional fields (for example a target score) may be added
+    non-breakingly in a future revision, so consumers should tolerate unknown fields." This is the only
+    published compatibility contract.
+status_page:
+  url: https://status.workera.ai/
+  status: 200
+  provider: UptimeRobot (status.workera.ai CNAME stats.uptimerobot.com)
+  title: Workera.ai — Service status
+  features:
+  - 90-day uptime history
+  - 24h / 7d / 30d / 90d uptime rollups
+  - status update history
+  - email subscription to updates
+  machine_readable_feed: not_found
+  note: >-
+    The page renders monitor data client-side; no RSS, Atom or JSON status feed was discoverable
+    anonymously, so an agent cannot poll Workera's status without scraping.
+sla:
+  published: false
+  note: >-
+    No public SLA, uptime commitment or credit schedule. Terms of use are at
+    https://www.workera.ai/legal/terms-of-use; commercial terms are contracted per enterprise customer.
+changelog:
+  published: false
+  note: >-
+    No dated API changelog or release-notes page was found on www.workera.ai, skills.workera.ai or the
+    workera-ai GitHub organization. Product announcements appear as undated blog posts.
+support:
+  channel: Workera CSM (customer success manager)
+  note: API keys, webhook endpoints, webhook secrets and scope grants are all provisioned by the CSM.
+evidence:
+- url: https://skills.workera.ai/api/docs
+  status: 200
+- url: https://status.workera.ai/
+  status: 200
+- url: https://www.workera.ai/legal/terms-of-use
+  status: 200

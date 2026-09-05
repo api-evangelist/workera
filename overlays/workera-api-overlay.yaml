@@ -1,0 +1,134 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for the Workera API
+  version: 1.0.0
+extends: ../openapi/workera-api-openapi.json
+x-generated: '2026-09-04'
+x-method: generated
+x-source: >-
+  Derived from the first-party OpenAPI at https://skills.workera.ai/api/docs/openapi plus the prose
+  sections of its own info.description. This overlay adds structure that is already stated in the
+  document's prose but is not machine-readable, and adds API Evangelist's own tagging. It never changes
+  the meaning of an operation, and the original spec is untouched in openapi/.
+actions:
+- target: $.info
+  description: >-
+    Record the two published base URLs and the contact route for key issuance, both of which are in
+    prose only.
+  update:
+    x-base-urls:
+    - https://skills.workera.ai/api/v1/
+    - https://skills.workera.ai/api/v2/
+    x-key-issuance: Enterprise customers only, via the Workera CSM. No self-serve signup.
+    x-api-evangelist-profile: https://apis.io/provider/workera
+- target: $
+  description: >-
+    Declare the tags the operations already reference. The source document uses eight tag names but
+    declares no top-level tags array, so no tag carries a description.
+  update:
+    tags:
+    - name: Ping
+      description: Connectivity and credential check.
+    - name: Domains
+      description: >-
+        Capabilities. "Domain" is the wire name and "capability" is the current product name for the
+        same object.
+    - name: Capability
+      description: Alias tag applied alongside Domains on the same operations.
+    - name: Programs
+      description: >-
+        Named initiatives that bundle capabilities with target scores, due dates and an initiative type.
+    - name: Benchmarks
+      description: >-
+        Aggregate cohort statistics per capability — enterprise average, enterprise 75th percentile and
+        big-tech average.
+    - name: Scores
+      description: Objectively assessed capability scores (0-300) for learners, v2.
+    - name: Self Ratings
+      description: Learner self-declared scores, kept deliberately separate from assessed scores.
+    - name: Audit Events
+      description: >-
+        SIEM-compatible enterprise audit log. Requires the audit_events API-key scope; returns 403
+        without it.
+- target: $.components.securitySchemes.authorization
+  description: Document the header name, value format and scope model, which the prose states.
+  update:
+    description: >-
+      Company-scoped API key sent as `authorization: Bearer YOUR_KEY`. Issued by a Workera CSM to
+      enterprise customers. Keys may be restricted by scope; an endpoint whose scope is missing returns
+      403. HTTPS is required.
+    x-header-name: authorization
+    x-value-format: Bearer YOUR_KEY
+    x-self-serve: false
+    x-known-scopes:
+    - audit_events
+- target: $.paths['/api/v1/audit_events'].get
+  description: Mark the scope this operation requires; the requirement is documented only in prose.
+  update:
+    x-required-scope: audit_events
+    x-siem: true
+- target: $.paths['/api/v1/benchmarks'].post
+  description: >-
+    Flag that this POST is query-shaped. It is the only non-GET operation in the contract and it has no
+    side effect, which is why the API's reversibility and idempotency posture is `na` rather than absent.
+  update:
+    x-safe: true
+    x-write: false
+    x-note: >-
+      Accepts a domain_identifiers filter body and returns aggregate benchmark data. Creates and
+      changes nothing.
+- target: $.components
+  description: >-
+    Record the pagination, rate-limit and error conventions as machine-readable extensions, and flag the
+    schemas that have no path.
+  update:
+    x-conventions:
+      pagination:
+        style: cursor
+        params:
+        - limit
+        - next_page_after
+        - order
+        default_limit: 10
+        max_limit: 100
+        response_fields:
+        - data
+        - has_more
+        - next_page
+      rate_limit_headers:
+      - x-ratelimit-limit
+      - x-ratelimit-remaining
+      - x-ratelimit-reset
+      rate_limit_status: 429
+      error_envelope:
+      - code
+      - message
+      - type
+      error_media_type: application/json
+      rfc9457: false
+    x-undocumented-schemas:
+      count: 41
+      note: >-
+        41 of 56 declared component schemas are referenced by no path — the Ambient coaching-agent and
+        Coach/recommendation response contracts. Recorded, not invented; see
+        data-model/workera-data-model.yml.
+- target: $
+  description: >-
+    Attach the event surface, which the source document describes in prose and payload examples but does
+    not model.
+  update:
+    x-events:
+      derived_asyncapi: ../asyncapi/workera-events-asyncapi.yml
+      signature_header: X-Workera-Signature
+      signature_algorithm: HMAC-SHA256
+      events:
+      - score_updated
+      - assessment_started
+      - assessment_completed
+      - program_completed
+      - self_score_completed
+      - appeal_approved
+    x-mcp:
+      endpoint: https://skills.workera.ai/mcp
+      auth: oauth2
+      manifest: ../mcp/workera-mcp.yml

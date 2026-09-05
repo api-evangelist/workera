@@ -1,0 +1,98 @@
+generated: '2026-09-04'
+method: derived
+source: openapi/workera-api-openapi.json
+enriched_from: https://skills.workera.ai/api/docs
+api: Workera API
+format: custom-json
+rfc9457: false
+media_type: application/json
+envelope:
+  schema: '#/components/schemas/ErrorResponse'
+  fields:
+  - name: code
+    type: string
+    audience: machine
+    description: Machine-readable error code
+  - name: message
+    type: string
+    audience: human
+    description: Human-readable error message, suitable for front-end display or logs
+  - name: type
+    type: string
+    audience: machine
+    description: Category of error
+  example:
+    code: resource_missing
+    message: User not found
+    type: invalid_request_error
+class_policy: >-
+  "Codes in the 200 range indicate success. Codes in the 400 range indicate an error that failed given
+  the information provided (e.g., authentication failed, a required parameter was omitted, etc.). Codes
+  in the 500 range indicate an error within the API which cannot be solved by providing different
+  parameters or input."
+status_codes:
+- status: 400
+  title: Invalid request parameters
+  schema: ErrorResponse
+  operations:
+  - WorkeraWebappsWeb.Rest.Controllers.AuditEventsController.index
+  remediation: Correct the malformed or out-of-range query parameter and retry.
+- status: 401
+  title: Request has to be authenticated to access this resource
+  schema: ErrorResponse
+  observed_body:
+    code: unauthorized
+    message: You are not authorized to access this resource. Please provide a valid API key.
+    type: invalid_request_error
+  observed_at: https://skills.workera.ai/api/v1
+  remediation: >-
+    Send an `authorization: Bearer <key>` header. Keys are issued per company by a Workera CSM.
+  applies_to: all documented operations
+- status: 403
+  title: Request is not authorized to access this resource
+  schema: ErrorResponse
+  remediation: >-
+    The key authenticated but lacks the scope the endpoint requires (for example `audit_events`). Ask
+    the Workera CSM to widen the key's scope.
+  applies_to: all documented operations
+- status: 404
+  title: Not found
+  schema: ErrorResponse
+  operations:
+  - WorkeraWebappsWeb.Rest.Controllers.V2.ScoresController.show
+  - WorkeraWebappsWeb.Rest.Controllers.V2.SelfRatingsController.show
+  - WorkeraWebappsWeb.Rest.Controllers.V2.UserScoresController.index
+  remediation: Verify the identifier; the referenced score, self-rating or user does not exist for this company.
+- status: 429
+  title: Rate limit has been reached
+  schema: ErrorResponse
+  remediation: >-
+    Read `x-ratelimit-reset` and wait that many seconds before retrying. See
+    rate-limits/workera-rate-limits.yml.
+  applies_to: all documented operations
+known_codes:
+- code: resource_missing
+  type: invalid_request_error
+  meaning: The referenced object does not exist for the authenticated company.
+  source: https://skills.workera.ai/api/docs
+- code: unauthorized
+  type: invalid_request_error
+  meaning: No valid API key was presented.
+  source: observed on https://skills.workera.ai/api/v1 (HTTP 401)
+- code: below_company_minimum
+  type: policy_rejection
+  meaning: >-
+    The requested Ambient privacy tier is below the company's configured minimum tier. Carries
+    `company_min_tier` (personal | anonymous | visible) alongside a human-readable `error` string.
+  schema: AmbientPrivacyTierMinimumError
+  note: >-
+    Declared in components.schemas but not referenced by any documented path — see
+    data-model/workera-data-model.yml on the undocumented Ambient surface.
+gaps:
+- >-
+  No 5xx responses are declared on any operation, so server-error shapes are undocumented even though
+  the prose commits to a 500 class.
+- >-
+  Workera publishes no enumerated error-code registry; `code` and `type` are documented as free-form
+  strings with only two examples given. An agent cannot branch exhaustively on `code`.
+- Errors are not RFC 9457 problem+json; the envelope is a bespoke code/message/type object.

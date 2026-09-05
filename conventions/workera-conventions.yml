@@ -1,0 +1,150 @@
+generated: '2026-09-04'
+method: searched
+source: https://skills.workera.ai/api/docs
+derived_from: openapi/workera-api-openapi.json
+api: Workera API
+style:
+  protocol: REST over HTTPS
+  encoding: JSON
+  urls: task-oriented
+  statement: >-
+    "The Workera API is organized around REST. Our API has task-oriented URLs, returns JSON-encoded
+    responses, and uses standard HTTP response codes, authentication, and verbs."
+  string_encoding: >-
+    Free-text fields are HTML-escaped at storage and decoded exactly once at the response boundary, so
+    a value stored as `Bob&#39;s Skill` is returned as `Bob's Skill`. Decoding is single-pass: a value
+    that legitimately contains literal entity text (`&amp;amp;`) is decoded exactly once (to `&amp;`).
+authentication:
+  style: bearer API key in the `authorization` header
+  detail: authentication/workera-authentication.yml
+versioning:
+  style: URI path segment
+  versions:
+  - v1
+  - v2
+  base_urls:
+  - https://skills.workera.ai/api/v1/
+  - https://skills.workera.ai/api/v2/
+  note: >-
+    v1 and v2 coexist on the same host and share authentication, rate limiting, pagination and error
+    handling. Scores and self-ratings moved to v2; capabilities (domains), programs, benchmarks, ping
+    and audit events remain on v1. No sunset date is published for v1.
+pagination:
+  style: cursor
+  parameters:
+  - name: limit
+    in: query
+    required: false
+    default: 10
+    maximum: 100
+    note: The audit-events endpoint documents a default of 50 and a maximum of 100.
+  - name: next_page_after
+    in: query
+    required: false
+    note: >-
+      Cursor start position. Must be in the same format as the field the sort is happening on (for
+      audit events, an ISO 8601 datetime).
+  - name: order
+    in: query
+    required: false
+    values:
+    - asc
+    - desc
+    default: desc
+  response_fields:
+  - name: has_more
+    meaning: whether more objects can be obtained
+  - name: next_page
+    meaning: absolute URL of the next page
+  - name: data
+    meaning: the page of results
+filtering:
+  supported: true
+  examples:
+  - endpoint: GET /api/v2/scores
+    params: [source]
+  - endpoint: GET /api/v2/users/{user_identifier}/scores
+    params: [domain]
+  - endpoint: GET /api/v1/programs
+    params: [status]
+  - endpoint: GET /api/v1/benchmarks
+    params: [domain_identifiers]
+  - endpoint: GET /api/v1/audit_events
+    params: [from, to, action, actor_id, target_type, target_id]
+field_expansion:
+  supported: false
+  note: No sparse-fieldset or expand parameter is documented.
+metadata:
+  supported: partial
+  note: >-
+    Audit events carry a free-form `metadata` object documented as PII-safe. There is no
+    customer-writable metadata surface, because the public API exposes no write operations.
+request_tracing:
+  request_id_field: request_id
+  note: >-
+    Audit events include a `request_id` documented for correlation with application logs. No
+    request-id response header is documented for ordinary API calls.
+error_envelope:
+  shape:
+    code: machine-readable error code
+    message: human-readable error message
+    type: category of error
+  media_type: application/json
+  rfc9457: false
+  detail: errors/workera-problem-types.yml
+  example:
+    code: resource_missing
+    message: User not found
+    type: invalid_request_error
+rate_limit_signaling:
+  headers:
+  - x-ratelimit-limit
+  - x-ratelimit-remaining
+  - x-ratelimit-reset
+  exhaustion_status: 429
+  detail: rate-limits/workera-rate-limits.yml
+idempotency:
+  coverage: na
+  mechanism: none
+  scope: []
+  note: >-
+    The public REST surface has no mutating operations to protect. Fourteen of fifteen documented
+    operations are GET; the single POST (POST /api/v1/benchmarks,
+    operationId WorkeraWebappsWeb.Rest.Controllers.BenchmarkController.enterprise) is a query-shaped
+    request that accepts a `domain_identifiers` filter body and returns aggregate benchmark data — it
+    creates nothing and has no side effect to replay. No Idempotency-Key header is documented, and none
+    is needed for this surface. Idempotency is therefore not-applicable rather than absent.
+  inbound_webhooks:
+    consumer_guidance: >-
+      Workera does document idempotency for the OTHER direction: webhook consumers are told to use the
+      payload `identifier` field to avoid processing the same score update twice, and delivery retries
+      (immediate, 1m, 5m, 15m, 1h, then stop after 5 failures) make duplicate delivery expected. This
+      is a requirement Workera places on the integrator, not a guarantee Workera offers on writes.
+    source: https://skills.workera.ai/api/docs
+dry_run_mode:
+  supported: na
+  note: Read-only public surface; there is no destructive action to rehearse.
+reversibility:
+  applicable: na
+  grade: na
+  write_surface: none
+  note: >-
+    The published Workera API exposes no create, update or delete operations, so there is nothing to
+    reverse. Fourteen GETs plus one query-shaped POST that returns aggregate benchmarks. Reversibility
+    is not-applicable, not absent — an agent calling this API cannot take an action that would need to
+    be taken back. The one state change adjacent to the API is a scoring appeal, which is resolved by
+    a human reviewer inside the Workera product and surfaced to integrators only as the read-only
+    `appeal_approved` webhook; it is not an API-callable operation and no reversal window is published.
+  reversal_operations: []
+  source: openapi/workera-api-openapi.json
+cross_links:
+  errors: errors/workera-problem-types.yml
+  lifecycle: lifecycle/workera-lifecycle.yml
+  authentication: authentication/workera-authentication.yml
+  rate_limits: rate-limits/workera-rate-limits.yml
+  events: asyncapi/workera-events-asyncapi.yml
+evidence:
+- url: https://skills.workera.ai/api/docs
+  status: 200
+- url: https://skills.workera.ai/api/docs/openapi
+  status: 200

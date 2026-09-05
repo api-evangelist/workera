@@ -1,0 +1,248 @@
+generated: '2026-09-04'
+method: derived
+source: openapi/workera-api-openapi.json
+enriched_from: https://skills.workera.ai/api/docs
+api: Workera API
+summary:
+  entities: 10
+  documented_schemas: 56
+  operations: 15
+  note: >-
+    The identifier convention across the whole model is a UUID string in a field literally named
+    `identifier` (audit events are the one exception, using `id`, a UUIDv7). There are no typed
+    id-prefixes. Relationships are expressed as bare identifier fields and identifier arrays, not as
+    $ref links or hypermedia, so a consumer must join client-side.
+entities:
+- name: Capability
+  aka: Domain
+  schema: DomainResponse
+  operations:
+  - WorkeraWebappsWeb.Rest.Controllers.DomainController.all
+  - WorkeraWebappsWeb.Rest.Controllers.DomainController.one
+  key: identifier
+  fields:
+  - identifier
+  - title
+  - description
+  - objectives
+  - industry
+  - languages
+  - status
+  - is_shared
+  - is_signature_domain
+  - assessment_url
+  - sources[] {id, type: baseline|reassessment, label}
+  - created_at
+  - updated_at
+  note: >-
+    "Domain" is the wire name; the docs and newer field descriptions call the same object a
+    "capability". `assessment_url` is a deeplink that auto-enrolls a user into the capability.
+- name: CompetencyModel
+  schema: CompetencyModelExportResponse
+  operations:
+  - WorkeraWebappsWeb.Rest.Controllers.DomainController.competency_model
+  key: identifier
+  shape: capability -> skill_areas[] -> skills[] -> behaviors[]
+  note: A four-level tree; every node exposes only identifier and name.
+- name: SkillArea
+  parent: CompetencyModel
+  key: identifier
+- name: Skill
+  parent: SkillArea
+  key: identifier
+  note: Also appears denormalized on scores as skill_ratings[] with a 1-4 rating.
+- name: Behavior
+  parent: Skill
+  key: identifier
+- name: Program
+  schema: ProgramResponse
+  operations:
+  - WorkeraWebappsWeb.Rest.Controllers.ProgramController.all
+  - WorkeraWebappsWeb.Rest.Controllers.ProgramController.one
+  key: identifier
+  fields:
+  - identifier
+  - name
+  - status
+  - initiative_type (skills_evaluation | skills_growth | limited_disclosure | benchmark)
+  - start_date
+  - due_date
+  - badge_template_id
+  - domains[] {identifier, title, elective, target_score}
+  - created_at
+  - updated_at
+  note: >-
+    `badge_template_id` is a Credly badge template ID, present only when the program has an active
+    badge template — a cross-system identifier that leaves the Workera namespace.
+- name: Score
+  aka: CapabilityScore
+  schema: V2ScoreResponse
+  operations:
+  - WorkeraWebappsWeb.Rest.Controllers.V2.ScoresController.index
+  - WorkeraWebappsWeb.Rest.Controllers.V2.ScoresController.show
+  - WorkeraWebappsWeb.Rest.Controllers.V2.UserScoresController.index
+  key: identifier
+  fields:
+  - identifier
+  - score (0-300)
+  - proficiency_level (beginner | developing | accomplished | expert)
+  - source (baseline_assessment | mini_assessment | full_reassessment)
+  - initiative_type (nullable)
+  - domain {identifier, name, program_identifiers[]}
+  - skill_ratings[] {identifier, name, rating 1-4, behaviors[]}
+  - user {identifier, email, employee{identifier}}
+  - created_at
+  - updated_at
+- name: SelfRating
+  schema: V2SelfRatingResponse
+  operations:
+  - WorkeraWebappsWeb.Rest.Controllers.V2.SelfRatingsController.index
+  - WorkeraWebappsWeb.Rest.Controllers.V2.SelfRatingsController.show
+  key: identifier
+  fields:
+  - identifier
+  - score
+  - domain {identifier, name}
+  - user {identifier, email, employee}
+  - created_at
+  note: Self-declared score, deliberately separate from the objectively assessed Score entity.
+- name: Benchmark
+  schema: BenchmarkResponse
+  operations:
+  - WorkeraWebappsWeb.Rest.Controllers.BenchmarkController.all
+  - WorkeraWebappsWeb.Rest.Controllers.BenchmarkController.one
+  - WorkeraWebappsWeb.Rest.Controllers.BenchmarkController.enterprise
+  key: domain_identifier
+  fields:
+  - domain_identifier
+  - enterprise_average_score
+  - enterprise_percentile_75_score
+  - big_tech_average_score
+  note: Aggregate cohort statistics keyed on a capability; not a per-user record.
+- name: User
+  embedded_only: true
+  key: identifier
+  fields:
+  - identifier
+  - email
+  - employee {identifier}
+  note: >-
+    There is no /users collection endpoint. A user is only ever reachable embedded inside a score or a
+    self-rating, or as the path parameter on
+    GET /api/v2/users/{user_identifier}/scores. `employee.identifier` is the customer's own HRIS
+    employee ID and is the join key back into the enterprise's systems.
+- name: AuditEvent
+  schema: AuditEvent
+  operations:
+  - WorkeraWebappsWeb.Rest.Controllers.AuditEventsController.index
+  key: id
+  key_format: UUIDv7
+  fields:
+  - id
+  - action ({domain}.{action}, e.g. auth.login)
+  - actor_id
+  - actor_type (user | admin | api_key | system)
+  - actor_enterprise_id
+  - targets[] {type, id}
+  - location (IP)
+  - user_agent
+  - request_id
+  - session_id
+  - metadata (PII-safe)
+  - created_at
+relationships:
+- from: Program
+  to: Capability
+  type: has_many
+  via: domains[].identifier
+  note: Each membership carries `elective` and `target_score`, so the edge is attributed.
+- from: Capability
+  to: CompetencyModel
+  type: has_one
+  via: GET /api/v1/domains/{identifier}/competency-model
+- from: CompetencyModel
+  to: SkillArea
+  type: has_many
+  via: skill_areas[]
+- from: SkillArea
+  to: Skill
+  type: has_many
+  via: skills[]
+- from: Skill
+  to: Behavior
+  type: has_many
+  via: behaviors[]
+- from: Score
+  to: Capability
+  type: belongs_to
+  via: domain.identifier
+- from: Score
+  to: Program
+  type: has_many
+  via: domain.program_identifiers[]
+  note: >-
+    Every program the learner holds the capability through. Distinct from the score's own
+    `initiative_type`, which is attributed via the single program the assessment ran under.
+- from: Score
+  to: User
+  type: belongs_to
+  via: user.identifier
+- from: Score
+  to: Skill
+  type: has_many
+  via: skill_ratings[].identifier
+- from: SelfRating
+  to: Capability
+  type: belongs_to
+  via: domain.identifier
+- from: SelfRating
+  to: User
+  type: belongs_to
+  via: user.identifier
+- from: Benchmark
+  to: Capability
+  type: belongs_to
+  via: domain_identifier
+- from: User
+  to: Employee
+  type: has_one
+  via: user.employee.identifier
+  note: External identifier owned by the customer's HRIS, used for SIEM and HR correlation.
+- from: AuditEvent
+  to: User
+  type: belongs_to
+  via: actor_id
+- from: AuditEvent
+  to: any
+  type: has_many
+  via: targets[]
+  note: Polymorphic — targets carry their own {type, id}, with `user` and `program` documented.
+- from: Program
+  to: CredlyBadgeTemplate
+  type: has_one
+  via: badge_template_id
+  external: true
+enums:
+  proficiency_level: [beginner, developing, accomplished, expert]
+  score_range: 0-300
+  skill_rating_range: 1-4
+  initiative_type: [skills_evaluation, skills_growth, limited_disclosure, benchmark]
+  score_source: [baseline_assessment, mini_assessment, full_reassessment]
+  assessment_source_type: [baseline, reassessment]
+  actor_type: [user, admin, api_key, system]
+  privacy_tier: [personal, anonymous, visible]
+undocumented_surface:
+  finding: >-
+    The published OpenAPI declares 56 component schemas but only 15 operations reference them. Thirty
+    schemas prefixed `Ambient*` (login/verify/refresh/revoke, presence, missions, scan telemetry,
+    privacy tiers, graduation, onboarding probes, program actions, progress sync) and five `Coach*` /
+    recommendation schemas (CoachChatResponse, CoachingCardsResponse, CoachingJournalResponse,
+    CoachingProfileResponse, LearningRecommendationsResponse, RolePlayPromptResponse,
+    NextLevelBehaviorsResponse, GoalToBehaviorResponse, PersonalGoalBehaviorProposalResponse,
+    DidYouKnowResponse, ScanClassifyResponse, MeResponse) have NO documented path.
+  interpretation: >-
+    These are the response contracts for Workera's "Ambient" always-on coaching agent
+    (https://www.workera.ai/platform/ai-agent/ambient), served by the same Phoenix application but not
+    published as REST endpoints. The data shapes are public; the operations are not. This is a real,
+    measurable documentation gap, not a hidden API — no path was probed or inferred.
+  schemas_without_paths: 41

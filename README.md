@@ -64,5 +64,17 @@
 > Full detail: **[Where this data comes from](https://apievangelist.com/about/where-our-data-comes-from)**
 <!-- API-EVANGELIST-PROVENANCE:END -->
 
-Workera is a company surfaced via the API Evangelist harvest backlog (source: secondary-market) and added to the network as a stub for full-pipeline profiling.
-- https://www.nasdaqprivatemarket.com/
+Workera is an enterprise skills-intelligence platform that measures, verifies and develops workforce
+capability. Adaptive AI assessments score individuals against a granular skill ontology spanning AI,
+machine learning, data science, cloud, cybersecurity and software engineering, then benchmark those
+verified scores against role requirements and industry cohorts.
+
+Workera publishes a first-party REST API (OpenAPI 3.0.0, 15 operations, read-only) documented at
+`https://skills.workera.ai/api/docs`, an OAuth-protected remote MCP server at
+`https://skills.workera.ai/mcp`, and a six-event HMAC-signed webhook catalog.
+
+- Website: https://www.workera.ai/
+- API reference: https://skills.workera.ai/api/docs
+- Status: https://status.workera.ai/
+- Trust center: https://trust.workera.ai/
+- GitHub: https://github.com/workera-ai

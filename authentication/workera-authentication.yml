@@ -1,0 +1,82 @@
+generated: '2026-09-04'
+method: searched
+source: https://skills.workera.ai/api/docs
+derived_from: openapi/workera-api-openapi.json
+summary:
+  types:
+  - http
+  primary: bearer API key
+  oauth2: false
+  note: >-
+    Two distinct auth models exist at Workera. The REST API uses a static, company-scoped bearer API
+    key. The remote MCP server at https://skills.workera.ai/mcp uses OAuth 2.0 with dynamic client
+    registration (see mcp/workera-mcp.yml and well-known/workera-oauth-authorization-server.json).
+schemes:
+- name: authorization
+  type: http
+  scheme: bearer
+  applied: global
+  location: header
+  header: authorization
+  value_format: 'Bearer YOUR_KEY'
+  example: >-
+    curl -H "Content-Type: application/json" -H "authorization: Bearer YOUR_KEY"
+    https://skills.workera.ai/api/v1/ping
+  sources:
+  - openapi/workera-api-openapi.json
+  - https://skills.workera.ai/api/docs
+key_issuance:
+  self_serve: false
+  process: >-
+    API keys are tied to a Workera company/organization, are available only to enterprise customers,
+    and are issued on request through the customer's Workera CSM. There is no public developer signup
+    that yields an API key.
+  rotation: not_documented
+scopes:
+  model: key-restricted scopes
+  enforcement: >-
+    API keys can be restricted by scope. Endpoints that require a scope return HTTP 403 when the scope
+    is missing.
+  known_scopes:
+  - name: audit_events
+    required_by:
+    - GET /api/v1/audit_events
+    evidence: https://skills.workera.ai/api/docs
+  note: >-
+    Workera documents that scopes exist and names one (audit_events) but publishes no full scope
+    reference. This is NOT an OAuth 2.0 scope surface, so scopes/workera-scopes.yml is intentionally
+    absent; the scope model belongs to the API key.
+transport:
+  https_required: true
+  statement: All API requests must be made authenticated and sent over HTTPS.
+mcp_authorization:
+  endpoint: https://skills.workera.ai/mcp
+  model: oauth2
+  issuer: https://skills.workera.ai
+  authorization_endpoint: https://skills.workera.ai/mcp/oauth/authorize
+  token_endpoint: https://skills.workera.ai/mcp/oauth/token
+  registration_endpoint: https://skills.workera.ai/mcp/oauth/register
+  grant_types:
+  - authorization_code
+  - refresh_token
+  pkce:
+  - S256
+  scopes_supported:
+  - mcp
+  discovery:
+  - https://skills.workera.ai/.well-known/oauth-authorization-server
+  - https://skills.workera.ai/.well-known/oauth-protected-resource/mcp
+webhook_authentication:
+  mechanism: HMAC-SHA256 request signature
+  header: X-Workera-Signature
+  format: 'sha256=<hex digest of the raw request body keyed with the shared webhook secret>'
+  secret_provisioning: configured per company through the Workera CSM
+  source: https://skills.workera.ai/api/docs
+evidence:
+- url: https://skills.workera.ai/api/docs
+  status: 200
+- url: https://skills.workera.ai/api/docs/openapi
+  status: 200
+- url: https://skills.workera.ai/api/v1
+  status: 401
+  body: '{"code":"unauthorized","message":"You are not authorized to access this resource. Please provide a valid API key.","type":"invalid_request_error"}'

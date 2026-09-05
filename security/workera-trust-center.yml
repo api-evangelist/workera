@@ -1,0 +1,42 @@
+generated: '2026-09-04'
+method: searched
+source: https://www.workera.ai/legal/security
+name: Workera Trust Center
+url: https://trust.workera.ai/
+url_status: 200
+url_note: >-
+  trust.workera.ai is a Vanta-hosted trust center (CNAME 60900f408041cfc5165baeab.cname.vantatrust.com).
+  The landing page returns HTTP 200 but the certification list is rendered client-side and is not
+  machine-readable to an anonymous crawler; the certifications below were read from Workera's own
+  first-party security page at https://www.workera.ai/legal/security.
+certifications:
+- name: ISO/IEC 27001
+  scope: Information Security Management System (ISMS)
+  evidence: https://www.workera.ai/legal/security
+- name: ISO/IEC 42001
+  scope: Artificial Intelligence Management System (AIMS)
+  evidence: https://www.workera.ai/legal/security
+- name: SOC 2 Type II
+  scope: Service organization controls, Type II report
+  evidence: https://www.workera.ai/legal/security
+- name: GDPR
+  scope: EU General Data Protection Regulation compliance program
+  evidence: https://www.workera.ai/legal/security
+document_access:
+  self_serve: false
+  note: >-
+    SOC 2 Type II reports, ISO certificates, penetration-test summaries and security policies are
+    released to authorized customers and prospective customers on request, not published openly.
+practices:
+- independent third-party penetration testing
+- continuous security monitoring
+audit_surface:
+  api: GET /api/v1/audit_events
+  note: >-
+    Workera exposes a SIEM-compatible enterprise audit-event feed over the public REST API, gated by
+    an `audit_events` API-key scope. See conformance/workera-conformance.yml.
+evidence:
+- url: https://www.workera.ai/legal/security
+  status: 200
+- url: https://trust.workera.ai/
+  status: 200

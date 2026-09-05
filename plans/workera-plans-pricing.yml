@@ -1,0 +1,32 @@
+generated: '2026-09-04'
+method: searched
+source: https://www.workera.ai/
+plan_count: 0
+pricing_page: null
+currency: null
+note: >-
+  Workera publishes no pricing page and no plan tiers. https://www.workera.ai/pricing and
+  https://www.workera.ai/plans both return HTTP 404, and neither appears in the 507-URL sitemap. The
+  site's only commercial call to action is "Book a demo" (https://www.workera.ai/book-demo), and the
+  API documentation states that API keys "are tied to your organization on Workera and only available
+  for enterprise customers. To receive an API key, contact your Workera CSM." This is an
+  enterprise contact-sales motion with no self-serve tier, no published list price, no quota table and
+  no overage schedule. An honest zero, not an unchecked field.
+plans: []
+access:
+  self_serve_signup: false
+  free_tier: false
+  trial_published: false
+  sales_gate: https://www.workera.ai/book-demo
+  waitlist:
+    product: Ambient (AI coaching agent)
+    url: https://www.workera.ai/platform/ai-agent/ambient/join-waitlist
+evidence:
+- url: https://www.workera.ai/pricing
+  status: 404
+- url: https://www.workera.ai/plans
+  status: 404
+- url: https://www.workera.ai/book-demo
+  status: 200
+- url: https://skills.workera.ai/api/docs
+  status: 200

@@ -1,0 +1,383 @@
+generated: '2026-09-04'
+method: derived
+source: https://skills.workera.ai/api/docs
+x-provenance: >-
+  Workera publishes no AsyncAPI document. This 3.0.0 document was DERIVED by API Evangelist from the
+  webhook catalog Workera documents in prose and JSON payload examples inside the OpenAPI
+  info.description at https://skills.workera.ai/api/docs. Every event name, field, enum and retry value
+  below is quoted from that source; nothing was invented. It is our artifact, not Workera's — see
+  conformance/workera-conformance.yml (id asyncapi, conforms false).
+asyncapi: 3.0.0
+info:
+  title: Workera Webhooks
+  version: '1.0'
+  description: |
+    Workera delivers HTTP POST webhooks to a customer-configured endpoint when assessment, program and
+    appeal events occur. Endpoints, event-type subscriptions and the shared signing secret are
+    provisioned per company through the customer's Workera CSM; there is no self-serve webhook
+    management API.
+
+    Every request carries an `X-Workera-Signature` header containing `sha256=<hex>`, an HMAC-SHA256
+    digest of the raw request body keyed with the shared secret. Consumers are told to verify it.
+
+    Delivery is at-least-once. A non-2xx response is retried immediately, then after 1 minute, 5
+    minutes, 15 minutes and 1 hour; after 5 failed attempts delivery stops and a notification email is
+    sent to the configured contact. Consumers are directed to deduplicate on the payload `identifier`.
+
+    Enterprise employee association is required for delivery: events for users with no resolvable
+    enterprise employee record are silently skipped, as are addresses on the company's webhook
+    exclusion list.
+  contact:
+    name: Workera
+    url: https://skills.workera.ai/api/docs
+defaultContentType: application/json
+servers:
+  consumer:
+    host: customer-configured
+    protocol: https
+    description: >-
+      The subscriber's own HTTPS endpoint. Workera is the publisher; the URL is set per company by the
+      Workera CSM.
+channels:
+  scoreUpdated:
+    address: (subscriber endpoint)
+    messages:
+      scoreUpdated:
+        $ref: '#/components/messages/scoreUpdated'
+  assessmentStarted:
+    address: (subscriber endpoint)
+    messages:
+      assessmentStarted:
+        $ref: '#/components/messages/assessmentStarted'
+  assessmentCompleted:
+    address: (subscriber endpoint)
+    messages:
+      assessmentCompleted:
+        $ref: '#/components/messages/assessmentCompleted'
+  programCompleted:
+    address: (subscriber endpoint)
+    messages:
+      programCompleted:
+        $ref: '#/components/messages/programCompleted'
+  selfScoreCompleted:
+    address: (subscriber endpoint)
+    messages:
+      selfScoreCompleted:
+        $ref: '#/components/messages/selfScoreCompleted'
+  appealApproved:
+    address: (subscriber endpoint)
+    messages:
+      appealApproved:
+        $ref: '#/components/messages/appealApproved'
+operations:
+  sendScoreUpdated:
+    action: send
+    channel:
+      $ref: '#/channels/scoreUpdated'
+  sendAssessmentStarted:
+    action: send
+    channel:
+      $ref: '#/channels/assessmentStarted'
+  sendAssessmentCompleted:
+    action: send
+    channel:
+      $ref: '#/channels/assessmentCompleted'
+  sendProgramCompleted:
+    action: send
+    channel:
+      $ref: '#/channels/programCompleted'
+  sendSelfScoreCompleted:
+    action: send
+    channel:
+      $ref: '#/channels/selfScoreCompleted'
+  sendAppealApproved:
+    action: send
+    channel:
+      $ref: '#/channels/appealApproved'
+components:
+  messages:
+    scoreUpdated:
+      name: score_updated
+      title: Score updated
+      summary: >-
+        Sent when a user completes an assessment that generates a new proficiency score, covering both
+        baseline assessments and skill boost sessions. Superseded by assessment_completed, which uses a
+        flat payload; no retirement date is published for score_updated.
+      contentType: application/json
+      headers:
+        type: object
+        properties:
+          X-Workera-Signature:
+            type: string
+            description: sha256=<HMAC-SHA256 hex digest of the raw body>
+      payload:
+        type: object
+        properties:
+          identifier:
+            type: string
+            description: Unique identifier for the capability score; use it to deduplicate.
+          source:
+            type: string
+            enum: [baseline, skill_boost]
+          user:
+            type: object
+            properties:
+              identifier: { type: string }
+              email: { type: string }
+              first_name: { type: string }
+              last_name: { type: string }
+          employee:
+            type: object
+            properties:
+              identifier: { type: string, description: Enterprise employee ID; required for delivery }
+          assessment:
+            type: object
+            properties:
+              domain:
+                type: object
+                properties:
+                  identifier: { type: string }
+                  name: { type: string }
+              program_identifiers:
+                type: array
+                items: { type: string }
+              completed_at: { type: string, format: date-time }
+          results:
+            type: object
+            properties:
+              domain_score:
+                type: object
+                properties:
+                  identifier: { type: string }
+                  score: { type: integer, description: 0-300 }
+                  proficiency_level:
+                    type: string
+                    enum: [beginner, developing, accomplished, expert]
+              skill_ratings:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    identifier: { type: string }
+                    name: { type: string }
+                    proficiency_level: { type: string }
+                    is_verified: { type: boolean }
+    assessmentStarted:
+      name: assessment_started
+      title: Assessment started
+      summary: >-
+        Sent once when a learner begins an assessment. Fires for a baseline assessment, a mini
+        assessment (scoring-v2) and a full reassessment. Does NOT fire on resume of an in-progress
+        assessment, or for non-enterprise learners.
+      contentType: application/json
+      payload:
+        type: object
+        properties:
+          event_type: { type: string, const: assessment_started }
+          assessment_identifier:
+            type: string
+            description: >-
+              Assessment identifier. A different ID space from the `identifier` on
+              assessment_completed (which is the domain score); the two do not correlate.
+          source:
+            type: string
+            enum: [baseline_assessment, mini_assessment, full_reassessment]
+          started_at: { type: string, format: date-time }
+          domain:
+            type: object
+            properties:
+              identifier: { type: string }
+              name: { type: string }
+              program_identifiers: { type: array, items: { type: string } }
+          user:
+            type: object
+            properties:
+              identifier: { type: string }
+              email: { type: string }
+              employee:
+                type: object
+                properties:
+                  identifier: { type: string }
+      x-extensibility: >-
+        Workera states the field set is intentionally open, not frozen; additional fields may be added
+        non-breakingly, so consumers must tolerate unknown fields.
+    assessmentCompleted:
+      name: assessment_completed
+      title: Assessment completed
+      summary: >-
+        The v2 replacement for score_updated, using a flat payload with topic-level skill ratings and
+        behaviors. Fires for baseline, mini and full reassessments regardless of initiative_type.
+      contentType: application/json
+      payload:
+        type: object
+        properties:
+          event_type: { type: string, const: assessment_completed }
+          identifier: { type: string, description: Unique domain-score identifier }
+          source:
+            type: string
+            enum: [baseline_assessment, mini_assessment, full_reassessment]
+          initiative_type:
+            type: string
+            nullable: true
+            enum: [skills_evaluation, skills_growth, limited_disclosure, benchmark]
+            description: >-
+              Initiative type of the program the assessment ran under, or null for standalone
+              assessments. skills_evaluation is the canonical high-stakes type; consumers decide which
+              types they treat as high-stakes.
+          completed_at: { type: string, format: date-time }
+          score: { type: integer, description: 0-300 }
+          proficiency_level:
+            type: string
+            enum: [beginner, developing, accomplished, expert]
+          domain:
+            type: object
+            properties:
+              identifier: { type: string }
+              name: { type: string }
+              program_identifiers: { type: array, items: { type: string } }
+          skill_ratings:
+            type: array
+            items:
+              type: object
+              properties:
+                identifier: { type: string }
+                name: { type: string }
+                rating: { type: integer, description: 1-4 }
+                behaviors:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      identifier: { type: string }
+                      name: { type: string }
+          user:
+            type: object
+            properties:
+              identifier: { type: string }
+              email: { type: string }
+              employee:
+                type: object
+                properties:
+                  identifier: { type: string }
+    programCompleted:
+      name: program_completed
+      title: Program completed
+      summary: >-
+        Sent once per learner per program when the learner's latest score satisfies the completion
+        threshold (total_required) for the program's required, non-elective capabilities.
+      contentType: application/json
+      payload:
+        type: object
+        properties:
+          event_type: { type: string, const: program_completed }
+          user:
+            type: object
+            properties:
+              identifier: { type: string }
+              email: { type: string }
+              employee:
+                type: object
+                properties:
+                  identifier: { type: string }
+          program:
+            type: object
+            properties:
+              identifier: { type: string }
+              name: { type: string }
+              initiative_type:
+                type: string
+                enum: [skills_evaluation, skills_growth, limited_disclosure, benchmark]
+                description: Always present.
+          completed_at: { type: string, format: date-time }
+    selfScoreCompleted:
+      name: self_score_completed
+      title: Self score completed
+      summary: >-
+        Sent when a learner submits a self-assessment score through the contextualized self-assessment
+        flow. Distinct from the objective assessment events.
+      contentType: application/json
+      payload:
+        type: object
+        properties:
+          event_type: { type: string, const: self_score_completed }
+          identifier: { type: string }
+          score: { type: integer, description: 1-300 }
+          domain:
+            type: object
+            properties:
+              identifier: { type: string }
+              name: { type: string }
+          user:
+            type: object
+            properties:
+              identifier: { type: string }
+              email: { type: string }
+              employee:
+                type: object
+                properties:
+                  identifier: { type: string }
+          completed_at: { type: string, format: date-time }
+    appealApproved:
+      name: appeal_approved
+      title: Appeal approved
+      summary: >-
+        Sent when a scoring appeal is approved and the learner's capability score has been updated as a
+        result. Not sent when an appeal is rejected, because no score change occurs.
+      contentType: application/json
+      payload:
+        type: object
+        properties:
+          event_type: { type: string, const: appeal_approved }
+          appeal:
+            type: object
+            properties:
+              identifier: { type: string }
+              decision:
+                type: string
+                enum: [correct, partially_correct, mostly_incorrect]
+              reasoning: { type: string }
+              user_appeal_reason: { type: string }
+              resolved_at: { type: string, format: date-time }
+          assessment_identifier: { type: string }
+          score_before_appeal: { type: integer, description: 0-300 }
+          score_after_appeal:
+            type: integer
+            description: >-
+              0-300. Represents the delta from this appeal, not necessarily the user's current best
+              score.
+          domain:
+            type: object
+            properties:
+              identifier: { type: string }
+              name: { type: string }
+              program_identifiers: { type: array, items: { type: string } }
+          user:
+            type: object
+            properties:
+              identifier: { type: string }
+              email: { type: string }
+              employee:
+                type: object
+                properties:
+                  identifier: { type: string }
+x-delivery:
+  transport: HTTPS POST
+  signature_header: X-Workera-Signature
+  signature_algorithm: HMAC-SHA256 over the raw request body
+  signature_format: sha256=<hex>
+  retries:
+  - immediate
+  - 1 minute
+  - 5 minutes
+  - 15 minutes
+  - 1 hour
+  max_attempts: 5
+  on_exhaustion: delivery stops; a notification email is sent to the configured contact
+  deduplication_key: identifier
+  configuration: per company, through the Workera CSM (no self-serve webhook API)
+  replay_or_backfill:
+    supported: partial
+    method: >-
+      Missed events can be recovered by reading GET /api/v2/scores/{score_identifier}, which returns
+      the same flat, topic-level shape as the assessment_completed payload. There is no webhook
+      delivery-log or replay endpoint.

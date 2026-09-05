@@ -1,23 +1,131 @@
 aid: workera
 name: Workera
-description: 'Workera is a company surfaced via the API Evangelist harvest backlog (source: secondary-market)
-  and added to the network as a stub for full-pipeline profiling.'
+description: >-
+  Workera is an enterprise skills-intelligence platform that measures, verifies and develops workforce
+  capability. Adaptive AI assessments score individuals against a granular skill ontology spanning AI,
+  machine learning, data science, data engineering, cloud, cybersecurity and software engineering, then
+  benchmark those verified scores against role requirements and industry cohorts so L&D leaders, technical
+  leaders and CHROs can plan hiring, upskilling and internal mobility on measured capability rather than
+  self-reported data. The platform integrates with HRIS, ATS, LMS and credentialing systems (Workday, SAP
+  SuccessFactors, Oracle HCM, Greenhouse, Degreed, Udemy, Coursera, LinkedIn Learning, Udacity, O'Reilly,
+  Credly) and exposes a first-party REST API plus an OAuth-protected remote MCP server for programmatic
+  access to capabilities, programs, scores, self-ratings, benchmarks and SIEM-compatible audit events.
+image: https://cdn.prod.website-files.com/68f1fe758b057338579c914a/691af34214ea5b2bbdf49f55_webclip.png
 url: https://raw.githubusercontent.com/api-evangelist/workera/refs/heads/main/apis.yml
 x-type: company
 x-source: harvest:secondary-market
-x-tier: stub
-x-tier-reason: harvest
 specificationVersion: '0.20'
 created: '2026-09-04'
 modified: '2026-09-04'
+position: Producing
 tags:
+- Skills Intelligence
+- Skills Assessment
+- Human Resources
+- Learning and Development
+- Talent Management
+- Workforce Analytics
+- Artificial Intelligence
+- Benchmarking
+- Enterprise Software
+- MCP
 - Company
-apis: []
+apis:
+- name: Workera API
+  description: >-
+    First-party REST API for the Workera skills-intelligence platform. Read-oriented, task-shaped
+    endpoints expose capabilities (domains) and their competency models, programs, v2 capability scores
+    and self-ratings, enterprise and per-capability benchmarks, and a SIEM-compatible audit-event feed.
+    Bearer API keys are issued per company by a Workera CSM and can be restricted by scope. Cursor
+    pagination (limit / next_page_after / order), x-ratelimit-* response headers and a machine-readable
+    code/message/type error envelope are documented across the whole surface, alongside an HMAC-SHA256
+    signed webhook catalog covering assessment and program lifecycle events.
+  humanURL: https://skills.workera.ai/api/docs
+  baseURL: https://skills.workera.ai/api/v1
+  tags:
+  - Skills Intelligence
+  - Skills Assessment
+  - Human Resources
+  - Learning and Development
+  - Talent Management
+  - Workforce Analytics
+  - Benchmarking
+  - Audit Logs
+  properties:
+  - type: OpenAPI
+    url: openapi/workera-api-openapi.json
+  - type: Documentation
+    url: https://skills.workera.ai/api/docs
+  - type: APIReference
+    url: https://skills.workera.ai/api/docs
+  - type: Authentication
+    url: authentication/workera-authentication.yml
+  - type: Conventions
+    url: conventions/workera-conventions.yml
+  - type: ErrorCatalog
+    url: errors/workera-problem-types.yml
+  - type: RateLimits
+    url: rate-limits/workera-rate-limits.yml
+  - type: DataModel
+    url: data-model/workera-data-model.yml
+  - type: Webhooks
+    url: asyncapi/workera-events-asyncapi.yml
+  - type: Overlay
+    url: overlays/workera-api-overlay.yaml
+  - type: Lifecycle
+    url: lifecycle/workera-lifecycle.yml
+  - type: Conformance
+    url: conformance/workera-conformance.yml
+  - type: ToolCrosswalk
+    url: mcp/workera-tool-crosswalk.yml
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
 - FN: APIs.json
   email: info@apis.io
 common:
+- type: TrustCenter
+  url: security/workera-trust-center.yml
 - type: Website
-  url: https://www.nasdaqprivatemarket.com/
+  url: https://www.workera.ai/
+- type: Blog
+  url: https://www.workera.ai/resources/blog
+- type: GitHubOrganization
+  url: https://github.com/workera-ai
+- type: Support
+  url: https://www.workera.ai/resources/faq
+- type: Login
+  url: https://skills.workera.ai/app/login
+- type: TermsOfService
+  url: https://www.workera.ai/legal/terms-of-use
+- type: PrivacyPolicy
+  url: https://www.workera.ai/legal/privacy-policy
+- type: StatusPage
+  url: https://status.workera.ai/
+- type: TrustCenter
+  url: https://trust.workera.ai/
+- type: Security
+  url: https://www.workera.ai/legal/responsible-vulnerability-disclosure-program
+- type: Compliance
+  url: https://www.workera.ai/legal/security
+- type: VulnerabilityDisclosure
+  url: security/workera-vulnerability-disclosure.yml
+- type: DomainSecurity
+  url: security/workera-domain-security.yml
+- type: MCPServer
+  url: mcp/workera-mcp.yml
+- type: WellKnown
+  url: well-known/workera-well-known.yml
+- type: LLMsTxt
+  url: llms/workera-llms.txt
+- type: AgentSkill
+  url: skills/_index.yml
+- type: Plans
+  url: plans/workera-plans-pricing.yml
+- type: Packages
+  url: packages/workera-packages.yml
+x-enrichment:
+  date: '2026-09-04'
+  status: enriched
+  artifacts_added: 27
+  pass: local-v3

@@ -1,0 +1,114 @@
+generated: '2026-09-04'
+method: derived
+source: openapi/workera-api-openapi.json
+note: >-
+  Workera runs BOTH a documented REST API and a first-party remote MCP server on the same host, so a
+  crosswalk is in scope. It is deliberately one-sided: the MCP tool list is OAuth-gated and Workera
+  publishes it nowhere, so there is no tool name to bind. crosswalk[] and mcp_only[] are empty because
+  no tool is KNOWN — not because the server has no tools. Every REST operation is therefore listed in
+  rest_only[] as unbound-pending-introspection. No tool name has been invented; a guessed crosswalk
+  would read as a verified binding and is exactly the fabrication this artifact exists to avoid.
+surfaces:
+  openapi:
+    url: openapi/workera-api-openapi.json
+    source: https://skills.workera.ai/api/docs/openapi
+    gated: false
+    operations: 15
+  mcp:
+    url: https://skills.workera.ai/mcp
+    gated: true
+    gate: OAuth 2.0 bearer, scope "mcp"
+    tools_known: 0
+  graphql: null
+coverage:
+  rest_operations: 15
+  mcp_tools_known: 0
+  bound: 0
+  rest_only: 15
+  mcp_only: unknown
+  confidence: none
+crosswalk: []
+mcp_only: []
+rest_only:
+- operationId: WorkeraWebappsWeb.Rest.Controllers.PingController.ping
+  method: GET
+  path: /api/v1/ping
+  summary: returns a pong
+  reason: no known MCP tool (server tool list is auth-gated)
+- operationId: WorkeraWebappsWeb.Rest.Controllers.DomainController.all
+  method: GET
+  path: /api/v1/domains
+  summary: Get all capabilities
+  reason: no known MCP tool (server tool list is auth-gated)
+- operationId: WorkeraWebappsWeb.Rest.Controllers.DomainController.one
+  method: GET
+  path: /api/v1/domains/{identifier}
+  summary: Get one capability
+  reason: no known MCP tool (server tool list is auth-gated)
+- operationId: WorkeraWebappsWeb.Rest.Controllers.DomainController.competency_model
+  method: GET
+  path: /api/v1/domains/{identifier}/competency-model
+  summary: Export a capability's competency model
+  reason: no known MCP tool (server tool list is auth-gated)
+- operationId: WorkeraWebappsWeb.Rest.Controllers.ProgramController.all
+  method: GET
+  path: /api/v1/programs
+  summary: Get all programs (including drafts)
+  reason: no known MCP tool (server tool list is auth-gated)
+- operationId: WorkeraWebappsWeb.Rest.Controllers.ProgramController.one
+  method: GET
+  path: /api/v1/programs/{identifier}
+  summary: Get one program
+  reason: no known MCP tool (server tool list is auth-gated)
+- operationId: WorkeraWebappsWeb.Rest.Controllers.BenchmarkController.all
+  method: GET
+  path: /api/v1/benchmarks
+  summary: Get benchmarks for all capabilities
+  reason: no known MCP tool (server tool list is auth-gated)
+- operationId: WorkeraWebappsWeb.Rest.Controllers.BenchmarkController.one
+  method: GET
+  path: /api/v1/benchmarks/{identifier}
+  summary: Get benchmarks for one capability
+  reason: no known MCP tool (server tool list is auth-gated)
+- operationId: WorkeraWebappsWeb.Rest.Controllers.BenchmarkController.enterprise
+  method: POST
+  path: /api/v1/benchmarks
+  summary: List general enterprise benchmark data
+  reason: no known MCP tool (server tool list is auth-gated)
+- operationId: WorkeraWebappsWeb.Rest.Controllers.AuditEventsController.index
+  method: GET
+  path: /api/v1/audit_events
+  summary: List audit events
+  reason: no known MCP tool (server tool list is auth-gated)
+- operationId: WorkeraWebappsWeb.Rest.Controllers.V2.ScoresController.index
+  method: GET
+  path: /api/v2/scores
+  summary: Get all scores
+  reason: no known MCP tool (server tool list is auth-gated)
+- operationId: WorkeraWebappsWeb.Rest.Controllers.V2.ScoresController.show
+  method: GET
+  path: /api/v2/scores/{score_identifier}
+  summary: Get detailed score
+  reason: no known MCP tool (server tool list is auth-gated)
+- operationId: WorkeraWebappsWeb.Rest.Controllers.V2.UserScoresController.index
+  method: GET
+  path: /api/v2/users/{user_identifier}/scores
+  summary: Get scores for a user
+  reason: no known MCP tool (server tool list is auth-gated)
+- operationId: WorkeraWebappsWeb.Rest.Controllers.V2.SelfRatingsController.index
+  method: GET
+  path: /api/v2/self-ratings
+  summary: Get all self-ratings
+  reason: no known MCP tool (server tool list is auth-gated)
+- operationId: WorkeraWebappsWeb.Rest.Controllers.V2.SelfRatingsController.show
+  method: GET
+  path: /api/v2/self-ratings/{rating_identifier}
+  summary: Get detailed self-rating
+  reason: no known MCP tool (server tool list is auth-gated)
+divergence_note: >-
+  A second divergence is already visible without introspection: the OpenAPI declares 41 component
+  schemas with no path (the Ambient coaching agent surface). Whether the MCP server exposes those as
+  tools is unknown and untestable anonymously.
+next_step: >-
+  Authenticated tools/list introspection with a Workera account would populate crosswalk[] and
+  mcp_only[] and give every bound tool a real inputSchema.

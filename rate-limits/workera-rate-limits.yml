@@ -1,0 +1,48 @@
+generated: '2026-09-04'
+method: searched
+source: https://skills.workera.ai/api/docs
+api: Workera API
+limit_count: 0
+published_numbers: false
+note: >-
+  Workera documents the rate-limit MECHANISM and the runtime headers in full but publishes no numeric
+  limit. The docs state plainly: "Workera does not guarantee any amount of requests and might adjust
+  limits for the next rate limit window at any point in time." The limit is therefore discoverable only
+  at runtime, from x-ratelimit-limit on any authenticated response. Recorded as limit_count 0 because
+  no number is published, not because no limiting exists.
+scope: per API key
+statement: >-
+  "The Workera API uses rate limiting per API key to prevent resource clogging."
+limits: []
+headers:
+- name: x-ratelimit-limit
+  meaning: The maximum amount of requests in this rate limit window
+- name: x-ratelimit-remaining
+  meaning: The remaining amount of requests in this rate limit window
+- name: x-ratelimit-reset
+  meaning: >-
+    The remaining number of seconds until the request count is reset to 0 and the remaining number of
+    requests is set to the limit for this rate limit window
+retry_after_header: false
+exhaustion:
+  status: 429
+  response_schema: ErrorResponse
+  declared_on: all 15 documented operations
+  guidance: >-
+    "Requests should be made until the remaining counter is at 0 and then wait until the seconds
+    indicated by the reset are reached before continuing."
+observed:
+  note: >-
+    Headers could not be observed anonymously — every endpoint returns 401 without a company API key,
+    and keys are CSM-issued to enterprise customers only.
+  probe:
+    url: https://skills.workera.ai/api/v1/ping
+    status: 401
+audit_events_specific:
+  default_page_size: 50
+  max_page_size: 100
+evidence:
+- url: https://skills.workera.ai/api/docs
+  status: 200
+- url: https://skills.workera.ai/api/v1/ping
+  status: 401

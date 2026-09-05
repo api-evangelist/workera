@@ -1,0 +1,47 @@
+generated: '2026-09-04'
+method: searched
+source: >-
+  registry.npmjs.org search, pypi.org, api.github.com/orgs/workera-ai,
+  https://skills.workera.ai/api/docs
+official_sdk_count: 0
+community_sdk_count: 0
+packages: []
+findings:
+  npm:
+    searched: 'https://registry.npmjs.org/-/v1/search?text=workera'
+    result: no Workera-published package; every hit is an unrelated "worker*" package
+  pypi:
+    probed: https://pypi.org/pypi/workera/json
+    status: 404
+  other_registries:
+    checked:
+    - Maven Central
+    - NuGet
+    - RubyGems
+    - crates.io
+    - pkg.go.dev
+    result: not checked individually — the docs and the GitHub org name no client library in any language, so there is no package name to resolve.
+  github_org:
+    url: https://github.com/workera-ai
+    public_repos: 13
+    first_party_client_libraries: 0
+    note: >-
+      All 13 public repositories are forks of third-party CI actions and Elixir libraries used to build
+      the product (elixir_samly, kaffy, langfuse_sdk, instructor_ex, openai.ex, calver-tag-action,
+      git-auto-commit-action, files-sync-action, merge-branch, action-semantic-pull-request,
+      release-action, changelog-action, airtable.py); seven are archived. Nothing published for API
+      consumers. The org confirms the platform is an Elixir/Phoenix application, which the API's
+      operationIds (WorkeraWebappsWeb.Rest.Controllers.*) also show.
+  docs:
+    url: https://skills.workera.ai/api/docs
+    sdk_section: absent
+    note: >-
+      The reference documents raw HTTP only. Its single code example is a curl command; there is no
+      install snippet, no language tab and no SDK link anywhere in the document.
+assessment: >-
+  Workera ships no client SDK in any language. Integration is raw HTTPS with a bearer key. No `SDKs`
+  pointer is emitted in apis.yml because there is no SDK to point at — recording an honest zero rather
+  than crediting a package that does not exist. For an enterprise API whose consumers are HR and
+  security engineering teams, even one maintained client would materially lower the integration cost;
+  as it stands there is also no abandonment signal to read, because there is nothing published to go
+  stale.

@@ -1,0 +1,159 @@
+generated: '2026-09-04'
+method: derived
+source: openapi/workera-api-openapi.json
+enriched_from:
+- https://skills.workera.ai/api/docs
+- https://www.workera.ai/legal/security
+- https://skills.workera.ai/.well-known/oauth-authorization-server
+api: Workera API
+sector: education / human resources / workforce
+regulatory_regime: education
+entries:
+- id: openapi-3.0
+  conforms: true
+  detail: OpenAPI 3.0.0 document served first-party at the API host.
+  evidence: https://skills.workera.ai/api/docs/openapi
+- id: rest
+  conforms: true
+  detail: >-
+    Self-declared. "The Workera API is organized around REST. Our API has task-oriented URLs, returns
+    JSON-encoded responses, and uses standard HTTP response codes, authentication, and verbs."
+  evidence: https://skills.workera.ai/api/docs
+- id: bearer-token-rfc6750
+  conforms: true
+  detail: >-
+    HTTP bearer scheme in the `authorization` header for the REST API, and RFC 6750
+    WWW-Authenticate challenges on the MCP endpoint.
+  evidence: openapi/workera-api-openapi.json#/components/securitySchemes/authorization
+- id: oauth2
+  conforms: true
+  detail: >-
+    OAuth 2.0 authorization-code flow with refresh tokens, protecting the MCP server. Not used by the
+    REST API, which uses a static company API key.
+  evidence: https://skills.workera.ai/.well-known/oauth-authorization-server
+- id: rfc8414-oauth-authorization-server-metadata
+  conforms: true
+  detail: Served at /.well-known/oauth-authorization-server with issuer, endpoints and grant metadata.
+  evidence: https://skills.workera.ai/.well-known/oauth-authorization-server
+- id: rfc9728-oauth-protected-resource-metadata
+  conforms: true
+  detail: >-
+    Served at /.well-known/oauth-protected-resource/mcp naming the resource, authorization_servers[],
+    scopes_supported and bearer_methods_supported, and referenced from the 401 WWW-Authenticate header.
+  evidence: https://skills.workera.ai/.well-known/oauth-protected-resource/mcp
+- id: rfc7591-dynamic-client-registration
+  conforms: true
+  detail: registration_endpoint https://skills.workera.ai/mcp/oauth/register is advertised.
+  evidence: https://skills.workera.ai/.well-known/oauth-authorization-server
+- id: rfc7636-pkce
+  conforms: true
+  detail: code_challenge_methods_supported declares S256.
+  evidence: https://skills.workera.ai/.well-known/oauth-authorization-server
+- id: mcp
+  conforms: true
+  detail: >-
+    First-party remote Model Context Protocol server at https://skills.workera.ai/mcp. Protocol
+    version could not be read anonymously; initialize returns 401.
+  evidence: https://skills.workera.ai/.well-known/oauth-protected-resource/mcp
+- id: pagination
+  conforms: true
+  style: cursor
+  detail: >-
+    limit / next_page_after / order across every list endpoint, with has_more and an absolute
+    next_page URL in the response.
+  evidence: https://skills.workera.ai/api/docs
+- id: rate-limit-headers
+  conforms: true
+  detail: x-ratelimit-limit, x-ratelimit-remaining, x-ratelimit-reset; 429 on exhaustion.
+  evidence: https://skills.workera.ai/api/docs
+- id: rfc9457
+  conforms: false
+  detail: >-
+    Errors use a bespoke JSON envelope {code, message, type} served as application/json, not
+    application/problem+json. No type URI, title, status or instance member.
+  evidence: openapi/workera-api-openapi.json#/components/schemas/ErrorResponse
+- id: idempotency
+  conforms: na
+  detail: >-
+    No mutating public operations exist, so there is no write to make idempotent. See
+    conventions/workera-conventions.yml.
+  evidence: openapi/workera-api-openapi.json
+- id: json-api
+  conforms: false
+  detail: Not JSON:API. Envelopes are plain {data, has_more, next_page}.
+  evidence: openapi/workera-api-openapi.json
+- id: odata
+  conforms: false
+  evidence: openapi/workera-api-openapi.json
+- id: webhooks-hmac-signature
+  conforms: true
+  detail: >-
+    Outbound webhooks are signed with HMAC-SHA256 over the raw body and delivered in an
+    X-Workera-Signature header formatted sha256=<hex>. Retry ladder is published.
+  evidence: https://skills.workera.ai/api/docs
+- id: asyncapi
+  conforms: false
+  detail: >-
+    Workera documents a six-event webhook catalog in prose and JSON examples but publishes no AsyncAPI
+    document. API Evangelist derived one at asyncapi/workera-events-asyncapi.yml; it is ours, not theirs.
+  evidence: https://skills.workera.ai/api/docs
+- id: soc2-type-ii
+  conforms: true
+  detail: SOC 2 Type II. Report released to customers and prospects on request, not published.
+  evidence: https://www.workera.ai/legal/security
+- id: iso-27001
+  conforms: true
+  detail: ISO/IEC 27001 Information Security Management System.
+  evidence: https://www.workera.ai/legal/security
+- id: iso-42001
+  conforms: true
+  detail: >-
+    ISO/IEC 42001 Artificial Intelligence Management System — the AI-governance certification, which is
+    materially relevant for a vendor whose product is algorithmic assessment of employees.
+  evidence: https://www.workera.ai/legal/security
+- id: gdpr
+  conforms: true
+  detail: GDPR compliance program stated on the first-party security page.
+  evidence: https://www.workera.ai/legal/security
+domain_standard:
+  regime: education
+  candidates_checked:
+  - scim
+  - lti
+  - oneroster
+  - ed-fi
+  - caliper
+  - qti
+  - oai-pmh
+  - shibboleth
+  - saml
+  - orcid
+  - datacite
+  - crossref
+  - open-badges
+  declared: none
+  detail: >-
+    No education or HR-tech domain standard is declared anywhere in the Workera contract. There is no
+    SCIM schema URN, no LTI launch or OneRoster/Ed-Fi/Caliper/QTI shape, no xAPI or Open Badges
+    assertion, and no HR Open Standards message type. The skill model is Workera's own proprietary
+    ontology (capability -> skill area -> skill -> behavior, scored 0-300 with a four-band proficiency
+    label), which is exactly the thing a standard would make portable. Two adjacencies exist and
+    neither is a conformance:
+      * Program.badge_template_id carries a Credly badge template ID. Credly issues Open Badges, but
+        Workera's contract exposes only the vendor identifier, not an Open Badges assertion, so a
+        consumer cannot read a badge from the Workera API.
+      * HRIS and ATS synchronisation (Workday, SAP SuccessFactors, Oracle HCM, Greenhouse) is brokered
+        through Kombo (connect.kombo.dev, present in the application CSP), a third-party unified HR API
+        — a bilateral connector layer, which is the alternative to a standard, not an instance of one.
+    Probed and not found: /scim/v2/ServiceProviderConfig (404), /scim/v2/Users (404),
+    /saml/metadata (404). A 401 under the /api/v1/ prefix is the prefix-wide auth gate, not evidence of
+    an endpoint, and is not counted as a hit.
+  reward_only_note: >-
+    This is recorded as an honest absence. The education regime's standards are built for institutions
+    and courseware; enterprise skills-verification has no settled interchange standard, so nothing is
+    invented to fill the slot.
+gaps:
+- No AsyncAPI, no api-catalog, no security.txt, no agent card.
+- No enumerated error-code registry.
+- No published rate-limit numbers.
+- No domain standard, so every score export is a bespoke integration.

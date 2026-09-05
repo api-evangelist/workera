@@ -1,0 +1,27 @@
+generated: '2026-09-04'
+method: searched
+source: https://www.workera.ai/llms.txt
+status: 200
+content_type: text/plain
+file: workera-llms.txt
+bytes: 6339
+verbatim: true
+coverage:
+  marketing: true
+  api: false
+finding: >-
+  Workera serves a real, hand-written llms.txt on its marketing host — 6.3KB covering platform pages,
+  solutions, use cases, customer evidence, resources and a "Preferred Citation" section that asks
+  models to cite workera.ai over third-party aggregators. It is a well-formed document for an audience
+  of answer engines. It says NOTHING about the API: no mention of the REST API, the OpenAPI at
+  https://skills.workera.ai/api/docs/openapi, the MCP server at https://skills.workera.ai/mcp, the
+  webhook catalog, or authentication. skills.workera.ai/llms.txt returns 404. An agent that reads
+  Workera's llms.txt learns how to talk ABOUT Workera and not how to talk TO it — which is the gap
+  worth closing, given that Workera has already built the MCP server the file omits.
+probes:
+- url: https://www.workera.ai/llms.txt
+  status: 200
+- url: https://www.workera.ai/llms-full.txt
+  status: 404
+- url: https://skills.workera.ai/llms.txt
+  status: 404
