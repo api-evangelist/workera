@@ -9,6 +9,11 @@ deployment:
   endpoint: https://skills.workera.ai/mcp
   auth: oauth
   verified: probed
+  probe_prior: (never probed)
+  probe: gated
+  probe_why: RFC 9728 challenge on the MCP path only
+  checked: '2026-09-11'
+  source: claimed-backlog re-probe 2026-09-11
 discovery:
   protected_resource: https://skills.workera.ai/.well-known/oauth-protected-resource/mcp
   authorization_server: https://skills.workera.ai/.well-known/oauth-authorization-server
@@ -43,21 +48,18 @@ authorization:
 tools:
   known: false
   count: null
-  note: >-
-    tools/list is auth-gated. An anonymous POST of
-    {"jsonrpc":"2.0","id":1,"method":"tools/list"} to https://skills.workera.ai/mcp returns HTTP 401
-    with body {"error":"unauthorized"} and a
-    WWW-Authenticate: Bearer resource_metadata="https://skills.workera.ai/.well-known/oauth-protected-resource/mcp", scope="mcp"
+  note: 'tools/list is auth-gated. An anonymous POST of {"jsonrpc":"2.0","id":1,"method":"tools/list"}
+    to https://skills.workera.ai/mcp returns HTTP 401 with body {"error":"unauthorized"} and a WWW-Authenticate:
+    Bearer resource_metadata="https://skills.workera.ai/.well-known/oauth-protected-resource/mcp", scope="mcp"
     challenge. `initialize` returns the same 401. Workera publishes no tool list in an llms.txt, a docs
     page or a repository, so the tool names and inputSchemas are NOT recorded here. Establishing them
     requires an authenticated OAuth introspection with a Workera account. No tool has been guessed or
-    derived — see mcp/workera-tool-crosswalk.yml.
+    derived — see mcp/workera-tool-crosswalk.yml.'
 supported_clients:
-  evidence: >-
-    The application's Content-Security-Policy form-action directive on skills.workera.ai enumerates the
-    OAuth redirect targets Workera has allow-listed, which is a first-party statement of the MCP
-    clients it expects: https://claude.ai, https://chatgpt.com, the chatgpt: scheme,
-    http://127.0.0.1:* (local MCP clients), https://teams.microsoft.com and https://*.glean.com.
+  evidence: 'The application''s Content-Security-Policy form-action directive on skills.workera.ai enumerates
+    the OAuth redirect targets Workera has allow-listed, which is a first-party statement of the MCP clients
+    it expects: https://claude.ai, https://chatgpt.com, the chatgpt: scheme, http://127.0.0.1:* (local
+    MCP clients), https://teams.microsoft.com and https://*.glean.com.'
   clients:
   - Claude
   - ChatGPT
