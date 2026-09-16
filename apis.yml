@@ -31,29 +31,16 @@ tags:
 - MCP
 - Company
 apis:
-- name: Workera API
-  description: >-
-    First-party REST API for the Workera skills-intelligence platform. Read-oriented, task-shaped
-    endpoints expose capabilities (domains) and their competency models, programs, v2 capability scores
-    and self-ratings, enterprise and per-capability benchmarks, and a SIEM-compatible audit-event feed.
-    Bearer API keys are issued per company by a Workera CSM and can be restricted by scope. Cursor
-    pagination (limit / next_page_after / order), x-ratelimit-* response headers and a machine-readable
-    code/message/type error envelope are documented across the whole surface, alongside an HMAC-SHA256
-    signed webhook catalog covering assessment and program lifecycle events.
+- aid: workera:workera-audit-events-api
+  name: Workera Audit Events API
+  description: The Audit Events API from Workera — 1 operation(s) for audit events.
   humanURL: https://skills.workera.ai/api/docs
   baseURL: https://skills.workera.ai/api/v1
   tags:
-  - Skills Intelligence
-  - Skills Assessment
-  - Human Resources
-  - Learning and Development
-  - Talent Management
-  - Workforce Analytics
-  - Benchmarking
-  - Audit Logs
+  - Audit Events
   properties:
   - type: OpenAPI
-    url: openapi/workera-api-openapi.json
+    url: openapi/workera-audit-events-api-openapi.yml
   - type: Documentation
     url: https://skills.workera.ai/api/docs
   - type: APIReference
@@ -70,8 +57,230 @@ apis:
     url: data-model/workera-data-model.yml
   - type: Webhooks
     url: asyncapi/workera-events-asyncapi.yml
-  - type: Overlay
-    url: overlays/workera-api-overlay.yaml
+  - type: Lifecycle
+    url: lifecycle/workera-lifecycle.yml
+  - type: Conformance
+    url: conformance/workera-conformance.yml
+  - type: ToolCrosswalk
+    url: mcp/workera-tool-crosswalk.yml
+- aid: workera:workera-benchmarks-api
+  name: Workera Benchmarks API
+  description: The Benchmarks API from Workera — 2 operation(s) for benchmarks.
+  humanURL: https://skills.workera.ai/api/docs
+  baseURL: https://skills.workera.ai/api/v1
+  tags:
+  - Benchmarks
+  properties:
+  - type: OpenAPI
+    url: openapi/workera-benchmarks-api-openapi.yml
+  - type: Documentation
+    url: https://skills.workera.ai/api/docs
+  - type: APIReference
+    url: https://skills.workera.ai/api/docs
+  - type: Authentication
+    url: authentication/workera-authentication.yml
+  - type: Conventions
+    url: conventions/workera-conventions.yml
+  - type: ErrorCatalog
+    url: errors/workera-problem-types.yml
+  - type: RateLimits
+    url: rate-limits/workera-rate-limits.yml
+  - type: DataModel
+    url: data-model/workera-data-model.yml
+  - type: Webhooks
+    url: asyncapi/workera-events-asyncapi.yml
+  - type: Lifecycle
+    url: lifecycle/workera-lifecycle.yml
+  - type: Conformance
+    url: conformance/workera-conformance.yml
+  - type: ToolCrosswalk
+    url: mcp/workera-tool-crosswalk.yml
+- aid: workera:workera-capability-api
+  name: Workera Capability API
+  description: The Capability API from Workera — 3 operation(s) for capability.
+  humanURL: https://skills.workera.ai/api/docs
+  baseURL: https://skills.workera.ai/api/v1
+  tags:
+  - Capability
+  properties:
+  - type: OpenAPI
+    url: openapi/workera-capability-api-openapi.yml
+  - type: Documentation
+    url: https://skills.workera.ai/api/docs
+  - type: APIReference
+    url: https://skills.workera.ai/api/docs
+  - type: Authentication
+    url: authentication/workera-authentication.yml
+  - type: Conventions
+    url: conventions/workera-conventions.yml
+  - type: ErrorCatalog
+    url: errors/workera-problem-types.yml
+  - type: RateLimits
+    url: rate-limits/workera-rate-limits.yml
+  - type: DataModel
+    url: data-model/workera-data-model.yml
+  - type: Webhooks
+    url: asyncapi/workera-events-asyncapi.yml
+  - type: Lifecycle
+    url: lifecycle/workera-lifecycle.yml
+  - type: Conformance
+    url: conformance/workera-conformance.yml
+  - type: ToolCrosswalk
+    url: mcp/workera-tool-crosswalk.yml
+- aid: workera:workera-domains-api
+  name: Workera Domains API
+  description: The Domains API from Workera — 3 operation(s) for domains.
+  humanURL: https://skills.workera.ai/api/docs
+  baseURL: https://skills.workera.ai/api/v1
+  tags:
+  - Domains
+  properties:
+  - type: OpenAPI
+    url: openapi/workera-domains-api-openapi.yml
+  - type: Documentation
+    url: https://skills.workera.ai/api/docs
+  - type: APIReference
+    url: https://skills.workera.ai/api/docs
+  - type: Authentication
+    url: authentication/workera-authentication.yml
+  - type: Conventions
+    url: conventions/workera-conventions.yml
+  - type: ErrorCatalog
+    url: errors/workera-problem-types.yml
+  - type: RateLimits
+    url: rate-limits/workera-rate-limits.yml
+  - type: DataModel
+    url: data-model/workera-data-model.yml
+  - type: Webhooks
+    url: asyncapi/workera-events-asyncapi.yml
+  - type: Lifecycle
+    url: lifecycle/workera-lifecycle.yml
+  - type: Conformance
+    url: conformance/workera-conformance.yml
+  - type: ToolCrosswalk
+    url: mcp/workera-tool-crosswalk.yml
+- aid: workera:workera-ping-api
+  name: Workera Ping API
+  description: The Ping API from Workera — 1 operation(s) for ping.
+  humanURL: https://skills.workera.ai/api/docs
+  baseURL: https://skills.workera.ai/api/v1
+  tags:
+  - Ping
+  properties:
+  - type: OpenAPI
+    url: openapi/workera-ping-api-openapi.yml
+  - type: Documentation
+    url: https://skills.workera.ai/api/docs
+  - type: APIReference
+    url: https://skills.workera.ai/api/docs
+  - type: Authentication
+    url: authentication/workera-authentication.yml
+  - type: Conventions
+    url: conventions/workera-conventions.yml
+  - type: ErrorCatalog
+    url: errors/workera-problem-types.yml
+  - type: RateLimits
+    url: rate-limits/workera-rate-limits.yml
+  - type: DataModel
+    url: data-model/workera-data-model.yml
+  - type: Webhooks
+    url: asyncapi/workera-events-asyncapi.yml
+  - type: Lifecycle
+    url: lifecycle/workera-lifecycle.yml
+  - type: Conformance
+    url: conformance/workera-conformance.yml
+  - type: ToolCrosswalk
+    url: mcp/workera-tool-crosswalk.yml
+- aid: workera:workera-programs-api
+  name: Workera Programs API
+  description: The Programs API from Workera — 2 operation(s) for programs.
+  humanURL: https://skills.workera.ai/api/docs
+  baseURL: https://skills.workera.ai/api/v1
+  tags:
+  - Programs
+  properties:
+  - type: OpenAPI
+    url: openapi/workera-programs-api-openapi.yml
+  - type: Documentation
+    url: https://skills.workera.ai/api/docs
+  - type: APIReference
+    url: https://skills.workera.ai/api/docs
+  - type: Authentication
+    url: authentication/workera-authentication.yml
+  - type: Conventions
+    url: conventions/workera-conventions.yml
+  - type: ErrorCatalog
+    url: errors/workera-problem-types.yml
+  - type: RateLimits
+    url: rate-limits/workera-rate-limits.yml
+  - type: DataModel
+    url: data-model/workera-data-model.yml
+  - type: Webhooks
+    url: asyncapi/workera-events-asyncapi.yml
+  - type: Lifecycle
+    url: lifecycle/workera-lifecycle.yml
+  - type: Conformance
+    url: conformance/workera-conformance.yml
+  - type: ToolCrosswalk
+    url: mcp/workera-tool-crosswalk.yml
+- aid: workera:workera-scores-api
+  name: Workera Scores API
+  description: The Scores API from Workera — 3 operation(s) for scores.
+  humanURL: https://skills.workera.ai/api/docs
+  baseURL: https://skills.workera.ai/api/v1
+  tags:
+  - Scores
+  properties:
+  - type: OpenAPI
+    url: openapi/workera-scores-api-openapi.yml
+  - type: Documentation
+    url: https://skills.workera.ai/api/docs
+  - type: APIReference
+    url: https://skills.workera.ai/api/docs
+  - type: Authentication
+    url: authentication/workera-authentication.yml
+  - type: Conventions
+    url: conventions/workera-conventions.yml
+  - type: ErrorCatalog
+    url: errors/workera-problem-types.yml
+  - type: RateLimits
+    url: rate-limits/workera-rate-limits.yml
+  - type: DataModel
+    url: data-model/workera-data-model.yml
+  - type: Webhooks
+    url: asyncapi/workera-events-asyncapi.yml
+  - type: Lifecycle
+    url: lifecycle/workera-lifecycle.yml
+  - type: Conformance
+    url: conformance/workera-conformance.yml
+  - type: ToolCrosswalk
+    url: mcp/workera-tool-crosswalk.yml
+- aid: workera:workera-self-ratings-api
+  name: Workera Self Ratings API
+  description: The Self Ratings API from Workera — 2 operation(s) for self ratings.
+  humanURL: https://skills.workera.ai/api/docs
+  baseURL: https://skills.workera.ai/api/v1
+  tags:
+  - Self Ratings
+  properties:
+  - type: OpenAPI
+    url: openapi/workera-self-ratings-api-openapi.yml
+  - type: Documentation
+    url: https://skills.workera.ai/api/docs
+  - type: APIReference
+    url: https://skills.workera.ai/api/docs
+  - type: Authentication
+    url: authentication/workera-authentication.yml
+  - type: Conventions
+    url: conventions/workera-conventions.yml
+  - type: ErrorCatalog
+    url: errors/workera-problem-types.yml
+  - type: RateLimits
+    url: rate-limits/workera-rate-limits.yml
+  - type: DataModel
+    url: data-model/workera-data-model.yml
+  - type: Webhooks
+    url: asyncapi/workera-events-asyncapi.yml
   - type: Lifecycle
     url: lifecycle/workera-lifecycle.yml
   - type: Conformance
@@ -84,6 +293,8 @@ maintainers:
 - FN: APIs.json
   email: info@apis.io
 common:
+- type: Overlay
+  url: overlays/workera-api-overlay.yaml
 - type: TrustCenter
   url: security/workera-trust-center.yml
 - type: Website
