@@ -101,6 +101,8 @@ apis:
   humanURL: https://skills.workera.ai/api/docs
   baseURL: https://skills.workera.ai/api/v1
   tags:
+  - Capabilities
+  tags_raw:
   - Capability
   properties:
   - type: OpenAPI
