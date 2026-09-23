@@ -1,0 +1,139 @@
+openapi: 3.2.0
+info:
+  description: '# API Documentation
+
+
+    _Hello and welcome to the Workera API!_
+
+
+    This documentation is designed to provide you with all the information you need to effectively integrate and interact with our services.'
+  title: Workera Ping API
+  version: '1.0'
+servers:
+- url: https://skills.workera.ai
+  variables: {}
+security:
+- authorization: []
+tags:
+- name: Ping
+paths:
+  /api/v1/ping:
+    get:
+      callbacks: {}
+      operationId: WorkeraWebappsWeb.Rest.Controllers.PingController.ping
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PongResponse'
+          description: Pong
+          headers:
+            x-ratelimit-limit:
+              description: The maximum amount of request within the rate limit window
+              example: 'x-ratelimit-limit: 100'
+              style: simple
+            x-ratelimit-remaining:
+              description: The remaining amount of request within the rate limit window
+              example: 'x-ratelimit-remaining: 10'
+              style: simple
+            x-ratelimit-reset:
+              description: The amount of seconds until the rate limit window resets and the remaining amount of requests is reset to the maximum amount of requests
+              example: 'x-ratelimit-reset: 10'
+              style: simple
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Request has to be authenticated to access this resource
+          headers:
+            x-ratelimit-limit:
+              description: The maximum amount of request within the rate limit window
+              example: 'x-ratelimit-limit: 100'
+              style: simple
+            x-ratelimit-remaining:
+              description: The remaining amount of request within the rate limit window
+              example: 'x-ratelimit-remaining: 10'
+              style: simple
+            x-ratelimit-reset:
+              description: The amount of seconds until the rate limit window resets and the remaining amount of requests is reset to the maximum amount of requests
+              example: 'x-ratelimit-reset: 10'
+              style: simple
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Request is not authorized to access this resource
+          headers:
+            x-ratelimit-limit:
+              description: The maximum amount of request within the rate limit window
+              example: 'x-ratelimit-limit: 100'
+              style: simple
+            x-ratelimit-remaining:
+              description: The remaining amount of request within the rate limit window
+              example: 'x-ratelimit-remaining: 10'
+              style: simple
+            x-ratelimit-reset:
+              description: The amount of seconds until the rate limit window resets and the remaining amount of requests is reset to the maximum amount of requests
+              example: 'x-ratelimit-reset: 10'
+              style: simple
+        '429':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Rate limit has been reached
+          headers:
+            x-ratelimit-limit:
+              description: The maximum amount of request within the rate limit window
+              example: 'x-ratelimit-limit: 100'
+              style: simple
+            x-ratelimit-remaining:
+              description: The remaining amount of request within the rate limit window
+              example: 'x-ratelimit-remaining: 0'
+              style: simple
+            x-ratelimit-reset:
+              description: The amount of seconds until the rate limit window resets and the remaining amount of requests is reset to the maximum amount of requests
+              example: 'x-ratelimit-reset: 10'
+              style: simple
+      summary: returns a pong
+      tags:
+      - Ping
+components:
+  schemas:
+    PongResponse:
+      description: Response schema for a pong
+      example:
+        data:
+        - pong: true
+      properties:
+        pong:
+          description: Always true
+          type: boolean
+      title: PongResponse
+      type: object
+    ErrorResponse:
+      description: Response schema for all errors
+      example:
+        code: resource_missing
+        message: User not found
+        type: invalid_request_error
+      properties:
+        code:
+          description: Machine-readable error code
+          type: string
+        message:
+          description: Human-readable error message
+          type: string
+        type:
+          description: Category of error
+          type: string
+      title: ErrorResponse
+      type: object
+  securitySchemes:
+    authorization:
+      scheme: bearer
+      type: http

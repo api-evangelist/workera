@@ -1,0 +1,331 @@
+openapi: 3.2.0
+info:
+  description: '# API Documentation
+
+
+    _Hello and welcome to the Workera API!_
+
+
+    This documentation is designed to provide you with all the information you need to effectively integrate and interact with our services.'
+  title: Workera Audit Events API
+  version: '1.0'
+servers:
+- url: https://skills.workera.ai
+  variables: {}
+security:
+- authorization: []
+tags:
+- name: Audit Events
+paths:
+  /api/v1/audit_events:
+    get:
+      callbacks: {}
+      description: Returns a paginated list of audit events for SIEM integration. Requires the audit_events scope. Events are scoped to the company associated with the API token.
+      operationId: WorkeraWebappsWeb.Rest.Controllers.AuditEventsController.index
+      parameters:
+      - description: Filter events from this timestamp (inclusive)
+        in: query
+        name: from
+        required: false
+        schema:
+          format: date-time
+          type: string
+      - description: Filter events to this timestamp (exclusive)
+        in: query
+        name: to
+        required: false
+        schema:
+          format: date-time
+          type: string
+      - description: Filter by action (e.g., auth.login, user.created)
+        in: query
+        name: action
+        required: false
+        schema:
+          type: string
+      - description: Filter by actor ID
+        in: query
+        name: actor_id
+        required: false
+        schema:
+          format: uuid
+          type: string
+      - description: Filter by target type (e.g., user, program)
+        in: query
+        name: target_type
+        required: false
+        schema:
+          type: string
+      - description: Filter by target ID
+        in: query
+        name: target_id
+        required: false
+        schema:
+          type: string
+      - description: 'Cursor value for pagination. Returns results with `created_at` after this timestamp when order is `asc`, or before this timestamp when order is `desc`. Format: ISO 8601 datetime'
+        example: '2024-09-25T00:00:00Z'
+        in: query
+        name: next_page_after
+        required: false
+        schema:
+          type: string
+      - description: 'The number of results to return per page. Allowed values: `1` to `100` **Default**: `10`'
+        example: 10
+        in: query
+        name: limit
+        required: false
+        schema:
+          type: integer
+      - description: 'The order in which the result data is sorted by, using the `created_at` field. Allowed values: `asc`, `desc`. **Default**: `desc`'
+        example: asc
+        in: query
+        name: order
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuditEventListResponse'
+          description: A paginated list of audit events
+          headers:
+            x-ratelimit-limit:
+              description: The maximum amount of request within the rate limit window
+              example: 'x-ratelimit-limit: 100'
+              style: simple
+            x-ratelimit-remaining:
+              description: The remaining amount of request within the rate limit window
+              example: 'x-ratelimit-remaining: 10'
+              style: simple
+            x-ratelimit-reset:
+              description: The amount of seconds until the rate limit window resets and the remaining amount of requests is reset to the maximum amount of requests
+              example: 'x-ratelimit-reset: 10'
+              style: simple
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Invalid request parameters
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Request has to be authenticated to access this resource
+          headers:
+            x-ratelimit-limit:
+              description: The maximum amount of request within the rate limit window
+              example: 'x-ratelimit-limit: 100'
+              style: simple
+            x-ratelimit-remaining:
+              description: The remaining amount of request within the rate limit window
+              example: 'x-ratelimit-remaining: 10'
+              style: simple
+            x-ratelimit-reset:
+              description: The amount of seconds until the rate limit window resets and the remaining amount of requests is reset to the maximum amount of requests
+              example: 'x-ratelimit-reset: 10'
+              style: simple
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Request is not authorized to access this resource
+          headers:
+            x-ratelimit-limit:
+              description: The maximum amount of request within the rate limit window
+              example: 'x-ratelimit-limit: 100'
+              style: simple
+            x-ratelimit-remaining:
+              description: The remaining amount of request within the rate limit window
+              example: 'x-ratelimit-remaining: 10'
+              style: simple
+            x-ratelimit-reset:
+              description: The amount of seconds until the rate limit window resets and the remaining amount of requests is reset to the maximum amount of requests
+              example: 'x-ratelimit-reset: 10'
+              style: simple
+        '429':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Rate limit has been reached
+          headers:
+            x-ratelimit-limit:
+              description: The maximum amount of request within the rate limit window
+              example: 'x-ratelimit-limit: 100'
+              style: simple
+            x-ratelimit-remaining:
+              description: The remaining amount of request within the rate limit window
+              example: 'x-ratelimit-remaining: 0'
+              style: simple
+            x-ratelimit-reset:
+              description: The amount of seconds until the rate limit window resets and the remaining amount of requests is reset to the maximum amount of requests
+              example: 'x-ratelimit-reset: 10'
+              style: simple
+      summary: List audit events
+      tags:
+      - Audit Events
+components:
+  schemas:
+    AuditEvent:
+      description: An audit event for enterprise security logging
+      example:
+        action: auth.login
+        actor_enterprise_id: EMP12345
+        actor_id: 462db21e-618d-4211-931a-9c5c43522e65
+        actor_type: user
+        created_at: '2026-01-10T14:30:00Z'
+        id: 01936e0a-1234-7000-8000-000000000001
+        location: 192.168.1.1
+        metadata: {}
+        request_id: FwK2X3Pg_qUABB4AAABI
+        session_id: abc123def456
+        targets:
+        - id: 462db21e-618d-4211-931a-9c5c43522e65
+          type: user
+        user_agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)
+      properties:
+        action:
+          description: The action that was performed (e.g., auth.login, user.created)
+          type: string
+        actor_enterprise_id:
+          description: Enterprise employee ID for SIEM correlation
+          type:
+          - string
+          - 'null'
+        actor_id:
+          description: Identifier of the actor who performed the action
+          format: uuid
+          type:
+          - string
+          - 'null'
+        actor_type:
+          description: Type of actor
+          enum:
+          - user
+          - admin
+          - api_key
+          - system
+          type: string
+        created_at:
+          description: Timestamp when the event occurred
+          format: date-time
+          type: string
+        id:
+          description: Unique identifier for the audit event (UUIDv7)
+          format: uuid
+          type: string
+        location:
+          description: IP address of the request origin
+          type:
+          - string
+          - 'null'
+        metadata:
+          additionalProperties: true
+          description: Additional event-specific data (PII-safe)
+          type: object
+        request_id:
+          description: Request ID for correlation with application logs
+          type:
+          - string
+          - 'null'
+        session_id:
+          description: Session ID for tracking user sessions
+          type:
+          - string
+          - 'null'
+        targets:
+          description: List of entities affected by the action
+          items:
+            properties:
+              id:
+                description: Identifier of the target
+                type: string
+              type:
+                description: Type of target (e.g., user, program)
+                type: string
+            required:
+            - type
+            - id
+            type: object
+          type: array
+        user_agent:
+          description: User agent string from the request
+          type:
+          - string
+          - 'null'
+      required:
+      - id
+      - action
+      - actor_type
+      - targets
+      - metadata
+      - created_at
+      title: AuditEvent
+      type: object
+    ErrorResponse:
+      description: Response schema for all errors
+      example:
+        code: resource_missing
+        message: User not found
+        type: invalid_request_error
+      properties:
+        code:
+          description: Machine-readable error code
+          type: string
+        message:
+          description: Human-readable error message
+          type: string
+        type:
+          description: Category of error
+          type: string
+      title: ErrorResponse
+      type: object
+    AuditEventListResponse:
+      description: Response schema for a paginated list of audit events
+      example:
+        data:
+        - action: auth.login
+          actor_enterprise_id: EMP12345
+          actor_id: 462db21e-618d-4211-931a-9c5c43522e65
+          actor_type: user
+          created_at: '2026-01-10T14:30:00Z'
+          id: 01936e0a-1234-7000-8000-000000000001
+          location: 192.168.1.1
+          metadata: {}
+          request_id: FwK2X3Pg_qUABB4AAABI
+          session_id: abc123def456
+          targets:
+          - id: 462db21e-618d-4211-931a-9c5c43522e65
+            type: user
+          user_agent: Mozilla/5.0
+        has_more: false
+        next_page: null
+      properties:
+        data:
+          description: List of audit events
+          items:
+            $ref: '#/components/schemas/AuditEvent'
+          type: array
+        has_more:
+          description: Indicates if more events are available via pagination
+          type: boolean
+        next_page:
+          description: URL to the next page of results
+          type:
+          - string
+          - 'null'
+      required:
+      - data
+      - has_more
+      - next_page
+      title: AuditEventListResponse
+      type: object
+  securitySchemes:
+    authorization:
+      scheme: bearer
+      type: http

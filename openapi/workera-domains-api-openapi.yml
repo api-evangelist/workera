@@ -1,0 +1,548 @@
+openapi: 3.2.0
+info:
+  description: '# API Documentation
+
+
+    _Hello and welcome to the Workera API!_
+
+
+    This documentation is designed to provide you with all the information you need to effectively integrate and interact with our services.'
+  title: Workera Domains API
+  version: '1.0'
+servers:
+- url: https://skills.workera.ai
+  variables: {}
+security:
+- authorization: []
+tags:
+- name: Domains
+paths:
+  /api/v1/domains:
+    get:
+      callbacks: {}
+      operationId: WorkeraWebappsWeb.Rest.Controllers.DomainController.all
+      parameters:
+      - description: 'Cursor value for pagination. Returns results with `updated_at` after this timestamp when order is `asc`, or before this timestamp when order is `desc`. Format: ISO 8601 datetime'
+        example: '2024-09-25T00:00:00Z'
+        in: query
+        name: next_page_after
+        required: false
+        schema:
+          type: string
+      - description: 'The number of results to return per page. Allowed values: `1` to `100` **Default**: `10`'
+        example: 10
+        in: query
+        name: limit
+        required: false
+        schema:
+          type: integer
+      - description: 'The order in which the result data is sorted by, using the `updated_at` field. Allowed values: `asc`, `desc`. **Default**: `desc`'
+        example: asc
+        in: query
+        name: order
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DomainListResponse'
+          description: A list of capabilities
+          headers:
+            x-ratelimit-limit:
+              description: The maximum amount of request within the rate limit window
+              example: 'x-ratelimit-limit: 100'
+              style: simple
+            x-ratelimit-remaining:
+              description: The remaining amount of request within the rate limit window
+              example: 'x-ratelimit-remaining: 10'
+              style: simple
+            x-ratelimit-reset:
+              description: The amount of seconds until the rate limit window resets and the remaining amount of requests is reset to the maximum amount of requests
+              example: 'x-ratelimit-reset: 10'
+              style: simple
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Request has to be authenticated to access this resource
+          headers:
+            x-ratelimit-limit:
+              description: The maximum amount of request within the rate limit window
+              example: 'x-ratelimit-limit: 100'
+              style: simple
+            x-ratelimit-remaining:
+              description: The remaining amount of request within the rate limit window
+              example: 'x-ratelimit-remaining: 10'
+              style: simple
+            x-ratelimit-reset:
+              description: The amount of seconds until the rate limit window resets and the remaining amount of requests is reset to the maximum amount of requests
+              example: 'x-ratelimit-reset: 10'
+              style: simple
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Request is not authorized to access this resource
+          headers:
+            x-ratelimit-limit:
+              description: The maximum amount of request within the rate limit window
+              example: 'x-ratelimit-limit: 100'
+              style: simple
+            x-ratelimit-remaining:
+              description: The remaining amount of request within the rate limit window
+              example: 'x-ratelimit-remaining: 10'
+              style: simple
+            x-ratelimit-reset:
+              description: The amount of seconds until the rate limit window resets and the remaining amount of requests is reset to the maximum amount of requests
+              example: 'x-ratelimit-reset: 10'
+              style: simple
+        '429':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Rate limit has been reached
+          headers:
+            x-ratelimit-limit:
+              description: The maximum amount of request within the rate limit window
+              example: 'x-ratelimit-limit: 100'
+              style: simple
+            x-ratelimit-remaining:
+              description: The remaining amount of request within the rate limit window
+              example: 'x-ratelimit-remaining: 0'
+              style: simple
+            x-ratelimit-reset:
+              description: The amount of seconds until the rate limit window resets and the remaining amount of requests is reset to the maximum amount of requests
+              example: 'x-ratelimit-reset: 10'
+              style: simple
+      summary: Get all capabilities
+      tags:
+      - Domains
+  /api/v1/domains/{identifier}:
+    get:
+      callbacks: {}
+      operationId: WorkeraWebappsWeb.Rest.Controllers.DomainController.one
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DomainResponse'
+          description: One capability
+          headers:
+            x-ratelimit-limit:
+              description: The maximum amount of request within the rate limit window
+              example: 'x-ratelimit-limit: 100'
+              style: simple
+            x-ratelimit-remaining:
+              description: The remaining amount of request within the rate limit window
+              example: 'x-ratelimit-remaining: 10'
+              style: simple
+            x-ratelimit-reset:
+              description: The amount of seconds until the rate limit window resets and the remaining amount of requests is reset to the maximum amount of requests
+              example: 'x-ratelimit-reset: 10'
+              style: simple
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Request has to be authenticated to access this resource
+          headers:
+            x-ratelimit-limit:
+              description: The maximum amount of request within the rate limit window
+              example: 'x-ratelimit-limit: 100'
+              style: simple
+            x-ratelimit-remaining:
+              description: The remaining amount of request within the rate limit window
+              example: 'x-ratelimit-remaining: 10'
+              style: simple
+            x-ratelimit-reset:
+              description: The amount of seconds until the rate limit window resets and the remaining amount of requests is reset to the maximum amount of requests
+              example: 'x-ratelimit-reset: 10'
+              style: simple
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Request is not authorized to access this resource
+          headers:
+            x-ratelimit-limit:
+              description: The maximum amount of request within the rate limit window
+              example: 'x-ratelimit-limit: 100'
+              style: simple
+            x-ratelimit-remaining:
+              description: The remaining amount of request within the rate limit window
+              example: 'x-ratelimit-remaining: 10'
+              style: simple
+            x-ratelimit-reset:
+              description: The amount of seconds until the rate limit window resets and the remaining amount of requests is reset to the maximum amount of requests
+              example: 'x-ratelimit-reset: 10'
+              style: simple
+        '429':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Rate limit has been reached
+          headers:
+            x-ratelimit-limit:
+              description: The maximum amount of request within the rate limit window
+              example: 'x-ratelimit-limit: 100'
+              style: simple
+            x-ratelimit-remaining:
+              description: The remaining amount of request within the rate limit window
+              example: 'x-ratelimit-remaining: 0'
+              style: simple
+            x-ratelimit-reset:
+              description: The amount of seconds until the rate limit window resets and the remaining amount of requests is reset to the maximum amount of requests
+              example: 'x-ratelimit-reset: 10'
+              style: simple
+      summary: Get one capability
+      tags:
+      - Domains
+  /api/v1/domains/{identifier}/competency-model:
+    get:
+      callbacks: {}
+      operationId: WorkeraWebappsWeb.Rest.Controllers.DomainController.competency_model
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompetencyModelExportResponse'
+          description: The capability's full competency model tree
+          headers:
+            x-ratelimit-limit:
+              description: The maximum amount of request within the rate limit window
+              example: 'x-ratelimit-limit: 100'
+              style: simple
+            x-ratelimit-remaining:
+              description: The remaining amount of request within the rate limit window
+              example: 'x-ratelimit-remaining: 10'
+              style: simple
+            x-ratelimit-reset:
+              description: The amount of seconds until the rate limit window resets and the remaining amount of requests is reset to the maximum amount of requests
+              example: 'x-ratelimit-reset: 10'
+              style: simple
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Request has to be authenticated to access this resource
+          headers:
+            x-ratelimit-limit:
+              description: The maximum amount of request within the rate limit window
+              example: 'x-ratelimit-limit: 100'
+              style: simple
+            x-ratelimit-remaining:
+              description: The remaining amount of request within the rate limit window
+              example: 'x-ratelimit-remaining: 10'
+              style: simple
+            x-ratelimit-reset:
+              description: The amount of seconds until the rate limit window resets and the remaining amount of requests is reset to the maximum amount of requests
+              example: 'x-ratelimit-reset: 10'
+              style: simple
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Request is not authorized to access this resource
+          headers:
+            x-ratelimit-limit:
+              description: The maximum amount of request within the rate limit window
+              example: 'x-ratelimit-limit: 100'
+              style: simple
+            x-ratelimit-remaining:
+              description: The remaining amount of request within the rate limit window
+              example: 'x-ratelimit-remaining: 10'
+              style: simple
+            x-ratelimit-reset:
+              description: The amount of seconds until the rate limit window resets and the remaining amount of requests is reset to the maximum amount of requests
+              example: 'x-ratelimit-reset: 10'
+              style: simple
+        '429':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Rate limit has been reached
+          headers:
+            x-ratelimit-limit:
+              description: The maximum amount of request within the rate limit window
+              example: 'x-ratelimit-limit: 100'
+              style: simple
+            x-ratelimit-remaining:
+              description: The remaining amount of request within the rate limit window
+              example: 'x-ratelimit-remaining: 0'
+              style: simple
+            x-ratelimit-reset:
+              description: The amount of seconds until the rate limit window resets and the remaining amount of requests is reset to the maximum amount of requests
+              example: 'x-ratelimit-reset: 10'
+              style: simple
+      summary: Export a capability's competency model
+      tags:
+      - Domains
+components:
+  schemas:
+    DomainResponse:
+      description: Response schema for a capability
+      example:
+        assessment_url: domain/8b65714c-ba23-41bc-97bc-0305fdff53e5
+        created_at: '2024-01-01T01:01:01Z'
+        description: In this sample domain, we will learn about...
+        identifier: 8b65714c-ba23-41bc-97bc-0305fdff53e5
+        industry: Cosmetics
+        is_shared: false
+        is_signature_domain: true
+        languages:
+        - en_US
+        - ger_DE
+        objectives: Objectives of the domain...
+        sources:
+        - id: 01945a0c-1234-7000-8000-000000000001
+          label: null
+          type: baseline
+        - id: 01945a0c-5678-7000-8000-000000000002
+          label: Q1 2025
+          type: reassessment
+        status: LIVE
+        title: A sample domain
+        updated_at: '2024-02-01T01:01:01Z'
+      properties:
+        assessment_url:
+          description: The target_url used for deeplinking to the assessment. Auto-enrolls the user into the capability
+          type: string
+        created_at:
+          description: The timestamp when the domain was created
+          format: date-time
+          type: string
+        description:
+          description: Capability description. Returned with HTML entities decoded.
+          type: string
+        identifier:
+          description: Unique capability identifier
+          type: string
+        industry:
+          description: The industry the domain was developed for
+          type: string
+        is_shared:
+          description: Indicates whether the capability is shared with the requesting company by another company
+          type: boolean
+        is_signature_domain:
+          description: Identifies Workera Signature Capabilities
+          type: boolean
+        languages:
+          description: List of languages this capability is translated to
+          items:
+            description: Language locale
+            type: string
+          type: array
+        objectives:
+          description: Capability objectives
+          type:
+          - string
+          - 'null'
+        sources:
+          description: List of assessment sources available for this domain
+          items:
+            properties:
+              id:
+                description: The domain template identifier
+                format: uuid
+                type: string
+              label:
+                description: Optional label for the assessment source
+                type:
+                - string
+                - 'null'
+              type:
+                description: The type of assessment source
+                enum:
+                - baseline
+                - reassessment
+                type: string
+            required:
+            - type
+            - id
+            type: object
+          type: array
+        status:
+          description: The status of the domain
+          enum:
+          - LIVE
+          - ARCHIVED
+          type: string
+        title:
+          description: Capability title. Returned with HTML entities decoded.
+          type: string
+        updated_at:
+          description: The timestamp when the domain was last updated
+          format: date-time
+          type: string
+      required:
+      - identifier
+      - title
+      - is_signature_domain
+      - is_shared
+      - languages
+      - assessment_url
+      - created_at
+      - updated_at
+      - status
+      - sources
+      title: DomainResponse
+      type: object
+    CompetencyModelExportResponse:
+      description: 'The full competency model for a capability: capability → skill areas → skills → behaviors. Every node exposes only its identifier and name.'
+      example:
+        identifier: 8b65714c-ba23-41bc-97bc-0305fdff53e5
+        name: Machine Learning
+        skill_areas:
+        - identifier: 11111111-1111-7000-8000-000000000001
+          name: Supervised Learning
+          skills:
+          - behaviors:
+            - identifier: 33333333-3333-7000-8000-000000000003
+              name: Linear Regression
+            identifier: 22222222-2222-7000-8000-000000000002
+            name: Linear Models
+      properties:
+        identifier:
+          description: Unique capability identifier
+          format: uuid
+          type: string
+        name:
+          description: Capability name
+          type: string
+        skill_areas:
+          items:
+            description: A skill area and its skills
+            properties:
+              identifier:
+                description: Unique skill area identifier
+                format: uuid
+                type: string
+              name:
+                description: Skill area name
+                type: string
+              skills:
+                items:
+                  description: A skill and its behaviors
+                  properties:
+                    behaviors:
+                      items:
+                        description: A behavior
+                        properties:
+                          identifier:
+                            description: Unique behavior identifier
+                            format: uuid
+                            type: string
+                          name:
+                            description: Behavior name
+                            type: string
+                        required:
+                        - identifier
+                        - name
+                        type: object
+                      type: array
+                    identifier:
+                      description: Unique skill identifier
+                      format: uuid
+                      type: string
+                    name:
+                      description: Skill name
+                      type: string
+                  required:
+                  - identifier
+                  - name
+                  - behaviors
+                  type: object
+                type: array
+            required:
+            - identifier
+            - name
+            - skills
+            type: object
+          type: array
+      required:
+      - identifier
+      - name
+      - skill_areas
+      title: CompetencyModelExportResponse
+      type: object
+    DomainListResponse:
+      description: Response schema for a list of capabilities
+      example:
+        data:
+        - assessment_url: domain/8b65714c-ba23-41bc-97bc-0305fdff53e5
+          created_at: '2024-01-01T01:01:01Z'
+          description: In this sample capability, we will learn about...
+          identifier: 8b65714c-ba23-41bc-97bc-0305fdff53e5
+          industry: Cosmetics
+          is_shared: false
+          is_signature_domain: true
+          languages:
+          - en_US
+          - ger_DE
+          sources:
+          - id: 01945a0c-1234-7000-8000-000000000001
+            label: null
+            type: baseline
+          status: LIVE
+          title: A sample capability
+          updated_at: '2024-02-01T01:01:01Z'
+        has_more: false
+        next_page: null
+      properties:
+        data:
+          description: List of capabilities
+          items:
+            $ref: '#/components/schemas/DomainResponse'
+          type: array
+        has_more:
+          description: indicates pagination can be used to retrieve more capabilities
+          type: boolean
+        next_page:
+          description: URL to the next page of the paginated capabilities
+          type:
+          - string
+          - 'null'
+      required:
+      - data
+      - has_more
+      - next_page
+      title: DomainListResponse
+      type: object
+    ErrorResponse:
+      description: Response schema for all errors
+      example:
+        code: resource_missing
+        message: User not found
+        type: invalid_request_error
+      properties:
+        code:
+          description: Machine-readable error code
+          type: string
+        message:
+          description: Human-readable error message
+          type: string
+        type:
+          description: Category of error
+          type: string
+      title: ErrorResponse
+      type: object
+  securitySchemes:
+    authorization:
+      scheme: bearer
+      type: http

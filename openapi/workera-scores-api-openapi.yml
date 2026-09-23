@@ -1,0 +1,598 @@
+openapi: 3.2.0
+info:
+  description: '# API Documentation
+
+
+    _Hello and welcome to the Workera API!_
+
+
+    This documentation is designed to provide you with all the information you need to effectively integrate and interact with our services.'
+  title: Workera Scores API
+  version: '1.0'
+servers:
+- url: https://skills.workera.ai
+  variables: {}
+security:
+- authorization: []
+tags:
+- name: Scores
+paths:
+  /api/v2/scores:
+    get:
+      callbacks: {}
+      description: 'Returns paginated assessment scores across all users in the company. Each score
+
+        includes the capability, proficiency level, score value (0-300), rating (1-4), source,
+
+        and skill-level ratings with behaviors.
+
+
+        Use the optional `source` query parameter to control which scores are returned.
+
+        `latest` (the default) returns only the latest score per user and capability,
+
+        `all` returns the full series of scoring events (e.g. baseline plus every
+
+        reassessment) for progression tracking, and `baseline_assessment`,
+
+        `mini_assessment` or `full_reassessment` return the latest score of that
+
+        assessment type.'
+      operationId: WorkeraWebappsWeb.Rest.Controllers.V2.ScoresController.index
+      parameters:
+      - description: Which scores to return (defaults to `latest`)
+        in: query
+        name: source
+        required: false
+        schema:
+          enum:
+          - latest
+          - all
+          - baseline_assessment
+          - mini_assessment
+          - full_reassessment
+          type: string
+      - description: 'Cursor value for pagination. Returns results with `created_at` after this timestamp when order is `asc`, or before this timestamp when order is `desc`. Format: ISO 8601 datetime'
+        example: '2024-09-25T00:00:00Z'
+        in: query
+        name: next_page_after
+        required: false
+        schema:
+          type: string
+      - description: 'The number of results to return per page. Allowed values: `1` to `100` **Default**: `10`'
+        example: 10
+        in: query
+        name: limit
+        required: false
+        schema:
+          type: integer
+      - description: 'The order in which the result data is sorted by, using the `created_at` field. Allowed values: `asc`, `desc`. **Default**: `desc`'
+        example: asc
+        in: query
+        name: order
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/V2ScoreListResponse'
+          description: A list of assessment scores
+          headers:
+            x-ratelimit-limit:
+              description: The maximum amount of request within the rate limit window
+              example: 'x-ratelimit-limit: 100'
+              style: simple
+            x-ratelimit-remaining:
+              description: The remaining amount of request within the rate limit window
+              example: 'x-ratelimit-remaining: 10'
+              style: simple
+            x-ratelimit-reset:
+              description: The amount of seconds until the rate limit window resets and the remaining amount of requests is reset to the maximum amount of requests
+              example: 'x-ratelimit-reset: 10'
+              style: simple
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Request has to be authenticated to access this resource
+          headers:
+            x-ratelimit-limit:
+              description: The maximum amount of request within the rate limit window
+              example: 'x-ratelimit-limit: 100'
+              style: simple
+            x-ratelimit-remaining:
+              description: The remaining amount of request within the rate limit window
+              example: 'x-ratelimit-remaining: 10'
+              style: simple
+            x-ratelimit-reset:
+              description: The amount of seconds until the rate limit window resets and the remaining amount of requests is reset to the maximum amount of requests
+              example: 'x-ratelimit-reset: 10'
+              style: simple
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Request is not authorized to access this resource
+          headers:
+            x-ratelimit-limit:
+              description: The maximum amount of request within the rate limit window
+              example: 'x-ratelimit-limit: 100'
+              style: simple
+            x-ratelimit-remaining:
+              description: The remaining amount of request within the rate limit window
+              example: 'x-ratelimit-remaining: 10'
+              style: simple
+            x-ratelimit-reset:
+              description: The amount of seconds until the rate limit window resets and the remaining amount of requests is reset to the maximum amount of requests
+              example: 'x-ratelimit-reset: 10'
+              style: simple
+        '429':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Rate limit has been reached
+          headers:
+            x-ratelimit-limit:
+              description: The maximum amount of request within the rate limit window
+              example: 'x-ratelimit-limit: 100'
+              style: simple
+            x-ratelimit-remaining:
+              description: The remaining amount of request within the rate limit window
+              example: 'x-ratelimit-remaining: 0'
+              style: simple
+            x-ratelimit-reset:
+              description: The amount of seconds until the rate limit window resets and the remaining amount of requests is reset to the maximum amount of requests
+              example: 'x-ratelimit-reset: 10'
+              style: simple
+      summary: Get all scores
+      tags:
+      - Scores
+  /api/v2/scores/{score_identifier}:
+    get:
+      callbacks: {}
+      description: 'Returns a single assessment score by its identifier, including the capability,
+
+        proficiency level, score value (0-300), source, and skill-level ratings
+
+        with behaviors.'
+      operationId: WorkeraWebappsWeb.Rest.Controllers.V2.ScoresController.show
+      parameters:
+      - description: Score identifier
+        in: path
+        name: score_identifier
+        required: true
+        schema:
+          format: uuid
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/V2ScoreResponse'
+          description: Assessment score detail
+          headers:
+            x-ratelimit-limit:
+              description: The maximum amount of request within the rate limit window
+              example: 'x-ratelimit-limit: 100'
+              style: simple
+            x-ratelimit-remaining:
+              description: The remaining amount of request within the rate limit window
+              example: 'x-ratelimit-remaining: 10'
+              style: simple
+            x-ratelimit-reset:
+              description: The amount of seconds until the rate limit window resets and the remaining amount of requests is reset to the maximum amount of requests
+              example: 'x-ratelimit-reset: 10'
+              style: simple
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Request has to be authenticated to access this resource
+          headers:
+            x-ratelimit-limit:
+              description: The maximum amount of request within the rate limit window
+              example: 'x-ratelimit-limit: 100'
+              style: simple
+            x-ratelimit-remaining:
+              description: The remaining amount of request within the rate limit window
+              example: 'x-ratelimit-remaining: 10'
+              style: simple
+            x-ratelimit-reset:
+              description: The amount of seconds until the rate limit window resets and the remaining amount of requests is reset to the maximum amount of requests
+              example: 'x-ratelimit-reset: 10'
+              style: simple
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Request is not authorized to access this resource
+          headers:
+            x-ratelimit-limit:
+              description: The maximum amount of request within the rate limit window
+              example: 'x-ratelimit-limit: 100'
+              style: simple
+            x-ratelimit-remaining:
+              description: The remaining amount of request within the rate limit window
+              example: 'x-ratelimit-remaining: 10'
+              style: simple
+            x-ratelimit-reset:
+              description: The amount of seconds until the rate limit window resets and the remaining amount of requests is reset to the maximum amount of requests
+              example: 'x-ratelimit-reset: 10'
+              style: simple
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Not found
+        '429':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Rate limit has been reached
+          headers:
+            x-ratelimit-limit:
+              description: The maximum amount of request within the rate limit window
+              example: 'x-ratelimit-limit: 100'
+              style: simple
+            x-ratelimit-remaining:
+              description: The remaining amount of request within the rate limit window
+              example: 'x-ratelimit-remaining: 0'
+              style: simple
+            x-ratelimit-reset:
+              description: The amount of seconds until the rate limit window resets and the remaining amount of requests is reset to the maximum amount of requests
+              example: 'x-ratelimit-reset: 10'
+              style: simple
+      summary: Get detailed score
+      tags:
+      - Scores
+  /api/v2/users/{user_identifier}/scores:
+    get:
+      callbacks: {}
+      description: 'Returns paginated assessment scores for a specific user. Each score includes
+
+        the capability, proficiency level, score value (0-300), rating (1-4), source
+
+        (baseline_assessment, mini_assessment, or full_reassessment), and skill-level
+
+        ratings with behaviors.
+
+
+        Use the optional `domain` query parameter to filter results to a single capability.'
+      operationId: WorkeraWebappsWeb.Rest.Controllers.V2.UserScoresController.index
+      parameters:
+      - description: User identifier
+        in: path
+        name: user_identifier
+        required: true
+        schema:
+          format: uuid
+          type: string
+      - description: Filter by capability identifier
+        in: query
+        name: domain
+        required: false
+        schema:
+          format: uuid
+          type: string
+      - description: 'Cursor value for pagination. Returns results with `created_at` after this timestamp when order is `asc`, or before this timestamp when order is `desc`. Format: ISO 8601 datetime'
+        example: '2024-09-25T00:00:00Z'
+        in: query
+        name: next_page_after
+        required: false
+        schema:
+          type: string
+      - description: 'The number of results to return per page. Allowed values: `1` to `100` **Default**: `10`'
+        example: 10
+        in: query
+        name: limit
+        required: false
+        schema:
+          type: integer
+      - description: 'The order in which the result data is sorted by, using the `created_at` field. Allowed values: `asc`, `desc`. **Default**: `desc`'
+        example: asc
+        in: query
+        name: order
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/V2ScoreListResponse'
+          description: A list of assessment scores
+          headers:
+            x-ratelimit-limit:
+              description: The maximum amount of request within the rate limit window
+              example: 'x-ratelimit-limit: 100'
+              style: simple
+            x-ratelimit-remaining:
+              description: The remaining amount of request within the rate limit window
+              example: 'x-ratelimit-remaining: 10'
+              style: simple
+            x-ratelimit-reset:
+              description: The amount of seconds until the rate limit window resets and the remaining amount of requests is reset to the maximum amount of requests
+              example: 'x-ratelimit-reset: 10'
+              style: simple
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Request has to be authenticated to access this resource
+          headers:
+            x-ratelimit-limit:
+              description: The maximum amount of request within the rate limit window
+              example: 'x-ratelimit-limit: 100'
+              style: simple
+            x-ratelimit-remaining:
+              description: The remaining amount of request within the rate limit window
+              example: 'x-ratelimit-remaining: 10'
+              style: simple
+            x-ratelimit-reset:
+              description: The amount of seconds until the rate limit window resets and the remaining amount of requests is reset to the maximum amount of requests
+              example: 'x-ratelimit-reset: 10'
+              style: simple
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Request is not authorized to access this resource
+          headers:
+            x-ratelimit-limit:
+              description: The maximum amount of request within the rate limit window
+              example: 'x-ratelimit-limit: 100'
+              style: simple
+            x-ratelimit-remaining:
+              description: The remaining amount of request within the rate limit window
+              example: 'x-ratelimit-remaining: 10'
+              style: simple
+            x-ratelimit-reset:
+              description: The amount of seconds until the rate limit window resets and the remaining amount of requests is reset to the maximum amount of requests
+              example: 'x-ratelimit-reset: 10'
+              style: simple
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Not found
+        '429':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Rate limit has been reached
+          headers:
+            x-ratelimit-limit:
+              description: The maximum amount of request within the rate limit window
+              example: 'x-ratelimit-limit: 100'
+              style: simple
+            x-ratelimit-remaining:
+              description: The remaining amount of request within the rate limit window
+              example: 'x-ratelimit-remaining: 0'
+              style: simple
+            x-ratelimit-reset:
+              description: The amount of seconds until the rate limit window resets and the remaining amount of requests is reset to the maximum amount of requests
+              example: 'x-ratelimit-reset: 10'
+              style: simple
+      summary: Get scores for a user
+      tags:
+      - Scores
+components:
+  schemas:
+    V2ScoreListResponse:
+      description: Response schema for a paginated list of assessment scores
+      properties:
+        data:
+          description: List of assessment scores
+          items:
+            $ref: '#/components/schemas/V2ScoreResponse'
+          type: array
+        has_more:
+          description: Indicates more results are available
+          type: boolean
+        next_page:
+          description: URL to the next page of results
+          type:
+          - string
+          - 'null'
+      required:
+      - data
+      - has_more
+      - next_page
+      title: V2ScoreListResponse
+      type: object
+    V2ScoreResponse:
+      description: Response schema for an assessment score
+      example:
+        created_at: '2021-01-01T00:00:00Z'
+        domain:
+          identifier: 0065714c-ba23-41bc-97bc-0305fdff53aa
+          name: Python Programming
+          program_identifiers:
+          - prog-123
+          - prog-456
+        identifier: 8cc33637-628c-4f1a-aa02-d489d91d1778
+        initiative_type: skills_evaluation
+        proficiency_level: accomplished
+        score: 220
+        skill_ratings:
+        - behaviors:
+          - identifier: behavior-001
+            name: Implement linked lists
+          - identifier: behavior-002
+            name: Use hash maps effectively
+          identifier: skill-001
+          name: Data Structures
+          rating: 3
+        source: baseline_assessment
+        updated_at: '2021-01-01T00:00:00Z'
+        user:
+          email: user@company.com
+          employee:
+            identifier: EMP12345
+          identifier: 1165714c-ba23-41bc-97bc-0305fdff53e7
+      properties:
+        created_at:
+          description: Creation timestamp
+          format: date-time
+          type: string
+        domain:
+          description: Capability information
+          properties:
+            identifier:
+              description: Unique capability identifier
+              type: string
+            name:
+              description: Capability name
+              type: string
+            program_identifiers:
+              description: Program identifiers this capability belongs to
+              items:
+                type: string
+              type: array
+          required:
+          - identifier
+          - name
+          - program_identifiers
+          type: object
+        identifier:
+          description: Unique score identifier
+          type: string
+        initiative_type:
+          description: Initiative type of the program that produced this score, or null for standalone/program-less scores. `skills_evaluation` is the canonical high-stakes type; consumers decide which types they treat as high-stakes.
+          enum:
+          - skills_evaluation
+          - skills_growth
+          - benchmark
+          type:
+          - string
+          - 'null'
+        proficiency_level:
+          description: Human-readable proficiency label
+          enum:
+          - beginner
+          - developing
+          - accomplished
+          - expert
+          type: string
+        score:
+          description: Capability score (0-300)
+          type: integer
+        skill_ratings:
+          description: Skill-level ratings with behaviors
+          items:
+            properties:
+              behaviors:
+                description: Behaviors that belong to this skill
+                items:
+                  properties:
+                    identifier:
+                      description: Unique behavior identifier
+                      type: string
+                    name:
+                      description: Behavior name
+                      type: string
+                  required:
+                  - identifier
+                  - name
+                  type: object
+                type: array
+              identifier:
+                description: Unique skill identifier
+                type: string
+              name:
+                description: Skill name
+                type: string
+              rating:
+                description: Skill rating (1-4)
+                type: integer
+            required:
+            - identifier
+            - name
+            - rating
+            - behaviors
+            type: object
+          type: array
+        source:
+          description: Assessment type that produced the score
+          enum:
+          - baseline_assessment
+          - mini_assessment
+          - full_reassessment
+          type: string
+        updated_at:
+          description: Last update timestamp
+          format: date-time
+          type: string
+        user:
+          description: User information
+          properties:
+            email:
+              description: User email
+              type: string
+            employee:
+              description: Employee information
+              properties:
+                identifier:
+                  description: Enterprise employee ID
+                  type: string
+              required:
+              - identifier
+              type: object
+            identifier:
+              description: Unique user identifier
+              type: string
+          required:
+          - identifier
+          - email
+          - employee
+          type: object
+      required:
+      - identifier
+      - score
+      - proficiency_level
+      - source
+      - created_at
+      - updated_at
+      - domain
+      - skill_ratings
+      - user
+      title: V2ScoreResponse
+      type: object
+    ErrorResponse:
+      description: Response schema for all errors
+      example:
+        code: resource_missing
+        message: User not found
+        type: invalid_request_error
+      properties:
+        code:
+          description: Machine-readable error code
+          type: string
+        message:
+          description: Human-readable error message
+          type: string
+        type:
+          description: Category of error
+          type: string
+      title: ErrorResponse
+      type: object
+  securitySchemes:
+    authorization:
+      scheme: bearer
+      type: http

@@ -1,0 +1,361 @@
+openapi: 3.2.0
+info:
+  description: '# API Documentation
+
+
+    _Hello and welcome to the Workera API!_
+
+
+    This documentation is designed to provide you with all the information you need to effectively integrate and interact with our services.'
+  title: Workera Benchmarks API
+  version: '1.0'
+servers:
+- url: https://skills.workera.ai
+  variables: {}
+security:
+- authorization: []
+tags:
+- name: Benchmarks
+paths:
+  /api/v1/benchmarks:
+    get:
+      callbacks: {}
+      operationId: WorkeraWebappsWeb.Rest.Controllers.BenchmarkController.all
+      parameters:
+      - description: Comma-separated list of capability identifiers to filter the benchmark data
+        example: "8b65714c-ba23-41bc-97bc-0305fdff53f5,\n          0065714c-ba23-41bc-97bc-0305fdff53aa"
+        in: query
+        name: domain_identifiers
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BenchmarkListResponse'
+          description: A list of benchmarks
+          headers:
+            x-ratelimit-limit:
+              description: The maximum amount of request within the rate limit window
+              example: 'x-ratelimit-limit: 100'
+              style: simple
+            x-ratelimit-remaining:
+              description: The remaining amount of request within the rate limit window
+              example: 'x-ratelimit-remaining: 10'
+              style: simple
+            x-ratelimit-reset:
+              description: The amount of seconds until the rate limit window resets and the remaining amount of requests is reset to the maximum amount of requests
+              example: 'x-ratelimit-reset: 10'
+              style: simple
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Request has to be authenticated to access this resource
+          headers:
+            x-ratelimit-limit:
+              description: The maximum amount of request within the rate limit window
+              example: 'x-ratelimit-limit: 100'
+              style: simple
+            x-ratelimit-remaining:
+              description: The remaining amount of request within the rate limit window
+              example: 'x-ratelimit-remaining: 10'
+              style: simple
+            x-ratelimit-reset:
+              description: The amount of seconds until the rate limit window resets and the remaining amount of requests is reset to the maximum amount of requests
+              example: 'x-ratelimit-reset: 10'
+              style: simple
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Request is not authorized to access this resource
+          headers:
+            x-ratelimit-limit:
+              description: The maximum amount of request within the rate limit window
+              example: 'x-ratelimit-limit: 100'
+              style: simple
+            x-ratelimit-remaining:
+              description: The remaining amount of request within the rate limit window
+              example: 'x-ratelimit-remaining: 10'
+              style: simple
+            x-ratelimit-reset:
+              description: The amount of seconds until the rate limit window resets and the remaining amount of requests is reset to the maximum amount of requests
+              example: 'x-ratelimit-reset: 10'
+              style: simple
+        '429':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Rate limit has been reached
+          headers:
+            x-ratelimit-limit:
+              description: The maximum amount of request within the rate limit window
+              example: 'x-ratelimit-limit: 100'
+              style: simple
+            x-ratelimit-remaining:
+              description: The remaining amount of request within the rate limit window
+              example: 'x-ratelimit-remaining: 0'
+              style: simple
+            x-ratelimit-reset:
+              description: The amount of seconds until the rate limit window resets and the remaining amount of requests is reset to the maximum amount of requests
+              example: 'x-ratelimit-reset: 10'
+              style: simple
+      summary: Get benchmarks for all capabilities
+      tags:
+      - Benchmarks
+    post:
+      callbacks: {}
+      operationId: WorkeraWebappsWeb.Rest.Controllers.BenchmarkController.enterprise
+      parameters:
+      - description: List of capability identifiers to get the benchmark data
+        example:
+        - 8b65714c-ba23-41bc-97bc-0305fdff53f5
+        - 0065714c-ba23-41bc-97bc-0305fdff53aa
+        in: body
+        name: domain_identifiers
+        required: false
+        schema:
+          type: array
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BenchmarkListResponse'
+          description: A list of capabilities and their enterprise benchmark data
+          headers:
+            x-ratelimit-limit:
+              description: The maximum amount of request within the rate limit window
+              example: 'x-ratelimit-limit: 100'
+              style: simple
+            x-ratelimit-remaining:
+              description: The remaining amount of request within the rate limit window
+              example: 'x-ratelimit-remaining: 10'
+              style: simple
+            x-ratelimit-reset:
+              description: The amount of seconds until the rate limit window resets and the remaining amount of requests is reset to the maximum amount of requests
+              example: 'x-ratelimit-reset: 10'
+              style: simple
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Request has to be authenticated to access this resource
+          headers:
+            x-ratelimit-limit:
+              description: The maximum amount of request within the rate limit window
+              example: 'x-ratelimit-limit: 100'
+              style: simple
+            x-ratelimit-remaining:
+              description: The remaining amount of request within the rate limit window
+              example: 'x-ratelimit-remaining: 10'
+              style: simple
+            x-ratelimit-reset:
+              description: The amount of seconds until the rate limit window resets and the remaining amount of requests is reset to the maximum amount of requests
+              example: 'x-ratelimit-reset: 10'
+              style: simple
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Request is not authorized to access this resource
+          headers:
+            x-ratelimit-limit:
+              description: The maximum amount of request within the rate limit window
+              example: 'x-ratelimit-limit: 100'
+              style: simple
+            x-ratelimit-remaining:
+              description: The remaining amount of request within the rate limit window
+              example: 'x-ratelimit-remaining: 10'
+              style: simple
+            x-ratelimit-reset:
+              description: The amount of seconds until the rate limit window resets and the remaining amount of requests is reset to the maximum amount of requests
+              example: 'x-ratelimit-reset: 10'
+              style: simple
+        '429':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Rate limit has been reached
+          headers:
+            x-ratelimit-limit:
+              description: The maximum amount of request within the rate limit window
+              example: 'x-ratelimit-limit: 100'
+              style: simple
+            x-ratelimit-remaining:
+              description: The remaining amount of request within the rate limit window
+              example: 'x-ratelimit-remaining: 0'
+              style: simple
+            x-ratelimit-reset:
+              description: The amount of seconds until the rate limit window resets and the remaining amount of requests is reset to the maximum amount of requests
+              example: 'x-ratelimit-reset: 10'
+              style: simple
+      summary: List general enterprise benchmark data
+      tags:
+      - Benchmarks
+  /api/v1/benchmarks/{identifier}:
+    get:
+      callbacks: {}
+      operationId: WorkeraWebappsWeb.Rest.Controllers.BenchmarkController.one
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BenchmarkResponse'
+          description: One benchmark
+          headers:
+            x-ratelimit-limit:
+              description: The maximum amount of request within the rate limit window
+              example: 'x-ratelimit-limit: 100'
+              style: simple
+            x-ratelimit-remaining:
+              description: The remaining amount of request within the rate limit window
+              example: 'x-ratelimit-remaining: 10'
+              style: simple
+            x-ratelimit-reset:
+              description: The amount of seconds until the rate limit window resets and the remaining amount of requests is reset to the maximum amount of requests
+              example: 'x-ratelimit-reset: 10'
+              style: simple
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Request has to be authenticated to access this resource
+          headers:
+            x-ratelimit-limit:
+              description: The maximum amount of request within the rate limit window
+              example: 'x-ratelimit-limit: 100'
+              style: simple
+            x-ratelimit-remaining:
+              description: The remaining amount of request within the rate limit window
+              example: 'x-ratelimit-remaining: 10'
+              style: simple
+            x-ratelimit-reset:
+              description: The amount of seconds until the rate limit window resets and the remaining amount of requests is reset to the maximum amount of requests
+              example: 'x-ratelimit-reset: 10'
+              style: simple
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Request is not authorized to access this resource
+          headers:
+            x-ratelimit-limit:
+              description: The maximum amount of request within the rate limit window
+              example: 'x-ratelimit-limit: 100'
+              style: simple
+            x-ratelimit-remaining:
+              description: The remaining amount of request within the rate limit window
+              example: 'x-ratelimit-remaining: 10'
+              style: simple
+            x-ratelimit-reset:
+              description: The amount of seconds until the rate limit window resets and the remaining amount of requests is reset to the maximum amount of requests
+              example: 'x-ratelimit-reset: 10'
+              style: simple
+        '429':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Rate limit has been reached
+          headers:
+            x-ratelimit-limit:
+              description: The maximum amount of request within the rate limit window
+              example: 'x-ratelimit-limit: 100'
+              style: simple
+            x-ratelimit-remaining:
+              description: The remaining amount of request within the rate limit window
+              example: 'x-ratelimit-remaining: 0'
+              style: simple
+            x-ratelimit-reset:
+              description: The amount of seconds until the rate limit window resets and the remaining amount of requests is reset to the maximum amount of requests
+              example: 'x-ratelimit-reset: 10'
+              style: simple
+      summary: Get benchmarks for one capability
+      tags:
+      - Benchmarks
+components:
+  schemas:
+    BenchmarkResponse:
+      description: Response schema for a benchmark item
+      example:
+        big_tech_average_score: null
+        domain_identifier: 8b65714c-ba23-41bc-97bc-0305fdff53f5
+        enterprise_average_score: 166
+        enterprise_percentile_75_score: 182
+      properties:
+        big_tech_average_score:
+          description: Average score of learners on that capability in big tech companies
+          type:
+          - integer
+          - 'null'
+        domain_identifier:
+          description: Unique capability identifier
+          type: string
+        enterprise_average_score:
+          description: Average score of learners on that capability in all enterprise companies
+          type:
+          - integer
+          - 'null'
+        enterprise_percentile_75_score:
+          description: 75th percentile score of learners on that capability in all enterprise companies
+          type:
+          - integer
+          - 'null'
+      required:
+      - domain_identifier
+      title: BenchmarkResponse
+      type: object
+    BenchmarkListResponse:
+      description: Response schema for a list of enterprise benchmark data
+      example:
+        data:
+        - big_tech_average_score: null
+          domain_identifier: 8b65714c-ba23-41bc-97bc-0305fdff53f5
+          enterprise_average_score: 166
+          enterprise_percentile_75_score: 182
+      properties:
+        data:
+          description: List of enterprise benchmark data
+          items:
+            $ref: '#/components/schemas/BenchmarkResponse'
+          type: array
+      required:
+      - data
+      title: BenchmarkListResponse
+      type: object
+    ErrorResponse:
+      description: Response schema for all errors
+      example:
+        code: resource_missing
+        message: User not found
+        type: invalid_request_error
+      properties:
+        code:
+          description: Machine-readable error code
+          type: string
+        message:
+          description: Human-readable error message
+          type: string
+        type:
+          description: Category of error
+          type: string
+      title: ErrorResponse
+      type: object
+  securitySchemes:
+    authorization:
+      scheme: bearer
+      type: http

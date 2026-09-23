@@ -1,0 +1,380 @@
+openapi: 3.2.0
+info:
+  description: '# API Documentation
+
+
+    _Hello and welcome to the Workera API!_
+
+
+    This documentation is designed to provide you with all the information you need to effectively integrate and interact with our services.'
+  title: Workera Programs API
+  version: '1.0'
+servers:
+- url: https://skills.workera.ai
+  variables: {}
+security:
+- authorization: []
+tags:
+- name: Programs
+paths:
+  /api/v1/programs:
+    get:
+      callbacks: {}
+      operationId: WorkeraWebappsWeb.Rest.Controllers.ProgramController.all
+      parameters:
+      - description: 'Filter by program status. Allowed: live | draft'
+        in: query
+        name: status
+        required: false
+        schema:
+          enum:
+          - live
+          - draft
+          type: string
+      - description: 'Cursor value for pagination. Returns results with `updated_at` after this timestamp when order is `asc`, or before this timestamp when order is `desc`. Format: ISO 8601 datetime'
+        example: '2024-09-25T00:00:00Z'
+        in: query
+        name: next_page_after
+        required: false
+        schema:
+          type: string
+      - description: 'The number of results to return per page. Allowed values: `1` to `100` **Default**: `10`'
+        example: 10
+        in: query
+        name: limit
+        required: false
+        schema:
+          type: integer
+      - description: 'The order in which the result data is sorted by, using the `updated_at` field. Allowed values: `asc`, `desc`. **Default**: `desc`'
+        example: asc
+        in: query
+        name: order
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProgramListResponse'
+          description: A list of programs
+          headers:
+            x-ratelimit-limit:
+              description: The maximum amount of request within the rate limit window
+              example: 'x-ratelimit-limit: 100'
+              style: simple
+            x-ratelimit-remaining:
+              description: The remaining amount of request within the rate limit window
+              example: 'x-ratelimit-remaining: 10'
+              style: simple
+            x-ratelimit-reset:
+              description: The amount of seconds until the rate limit window resets and the remaining amount of requests is reset to the maximum amount of requests
+              example: 'x-ratelimit-reset: 10'
+              style: simple
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Request has to be authenticated to access this resource
+          headers:
+            x-ratelimit-limit:
+              description: The maximum amount of request within the rate limit window
+              example: 'x-ratelimit-limit: 100'
+              style: simple
+            x-ratelimit-remaining:
+              description: The remaining amount of request within the rate limit window
+              example: 'x-ratelimit-remaining: 10'
+              style: simple
+            x-ratelimit-reset:
+              description: The amount of seconds until the rate limit window resets and the remaining amount of requests is reset to the maximum amount of requests
+              example: 'x-ratelimit-reset: 10'
+              style: simple
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Request is not authorized to access this resource
+          headers:
+            x-ratelimit-limit:
+              description: The maximum amount of request within the rate limit window
+              example: 'x-ratelimit-limit: 100'
+              style: simple
+            x-ratelimit-remaining:
+              description: The remaining amount of request within the rate limit window
+              example: 'x-ratelimit-remaining: 10'
+              style: simple
+            x-ratelimit-reset:
+              description: The amount of seconds until the rate limit window resets and the remaining amount of requests is reset to the maximum amount of requests
+              example: 'x-ratelimit-reset: 10'
+              style: simple
+        '429':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Rate limit has been reached
+          headers:
+            x-ratelimit-limit:
+              description: The maximum amount of request within the rate limit window
+              example: 'x-ratelimit-limit: 100'
+              style: simple
+            x-ratelimit-remaining:
+              description: The remaining amount of request within the rate limit window
+              example: 'x-ratelimit-remaining: 0'
+              style: simple
+            x-ratelimit-reset:
+              description: The amount of seconds until the rate limit window resets and the remaining amount of requests is reset to the maximum amount of requests
+              example: 'x-ratelimit-reset: 10'
+              style: simple
+      summary: Get all programs (including drafts)
+      tags:
+      - Programs
+  /api/v1/programs/{identifier}:
+    get:
+      callbacks: {}
+      operationId: WorkeraWebappsWeb.Rest.Controllers.ProgramController.one
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProgramResponse'
+          description: One Program
+          headers:
+            x-ratelimit-limit:
+              description: The maximum amount of request within the rate limit window
+              example: 'x-ratelimit-limit: 100'
+              style: simple
+            x-ratelimit-remaining:
+              description: The remaining amount of request within the rate limit window
+              example: 'x-ratelimit-remaining: 10'
+              style: simple
+            x-ratelimit-reset:
+              description: The amount of seconds until the rate limit window resets and the remaining amount of requests is reset to the maximum amount of requests
+              example: 'x-ratelimit-reset: 10'
+              style: simple
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Request has to be authenticated to access this resource
+          headers:
+            x-ratelimit-limit:
+              description: The maximum amount of request within the rate limit window
+              example: 'x-ratelimit-limit: 100'
+              style: simple
+            x-ratelimit-remaining:
+              description: The remaining amount of request within the rate limit window
+              example: 'x-ratelimit-remaining: 10'
+              style: simple
+            x-ratelimit-reset:
+              description: The amount of seconds until the rate limit window resets and the remaining amount of requests is reset to the maximum amount of requests
+              example: 'x-ratelimit-reset: 10'
+              style: simple
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Request is not authorized to access this resource
+          headers:
+            x-ratelimit-limit:
+              description: The maximum amount of request within the rate limit window
+              example: 'x-ratelimit-limit: 100'
+              style: simple
+            x-ratelimit-remaining:
+              description: The remaining amount of request within the rate limit window
+              example: 'x-ratelimit-remaining: 10'
+              style: simple
+            x-ratelimit-reset:
+              description: The amount of seconds until the rate limit window resets and the remaining amount of requests is reset to the maximum amount of requests
+              example: 'x-ratelimit-reset: 10'
+              style: simple
+        '429':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Rate limit has been reached
+          headers:
+            x-ratelimit-limit:
+              description: The maximum amount of request within the rate limit window
+              example: 'x-ratelimit-limit: 100'
+              style: simple
+            x-ratelimit-remaining:
+              description: The remaining amount of request within the rate limit window
+              example: 'x-ratelimit-remaining: 0'
+              style: simple
+            x-ratelimit-reset:
+              description: The amount of seconds until the rate limit window resets and the remaining amount of requests is reset to the maximum amount of requests
+              example: 'x-ratelimit-reset: 10'
+              style: simple
+      summary: Get one program
+      tags:
+      - Programs
+components:
+  schemas:
+    ProgramResponse:
+      description: Response schema for a program
+      example:
+        created_at: '2024-01-01T01:01:01Z'
+        domains:
+        - elective: false
+          identifier: 8b65714c-ba23-41bc-97bc-0305fdff53e5
+          target_score: 200
+          title: Supervised Learning Foundations
+        - elective: true
+          identifier: a1f2e3d4-5678-90ab-cdef-1234567890ab
+          target_score: 220
+          title: Applied Deep Learning
+        due_date: '2024-06-30'
+        identifier: e26dc707-6ec0-44d3-aee9-9b558ad5d77b
+        initiative_type: skills_evaluation
+        name: Data Science Bootcamp
+        start_date: '2024-01-01'
+        status: LIVE
+        updated_at: '2024-02-01T01:01:01Z'
+      properties:
+        badge_template_id:
+          description: Identifier of the badge template associated with this program. Present only when the program has an active badge template configured; omitted otherwise. The value is currently a Credly badge template ID.
+          type: string
+        created_at:
+          description: The timestamp when the program was created
+          format: date-time
+          type: string
+        domains:
+          description: Capabilities that make up the program. Order is not guaranteed; do not rely on positional semantics.
+          items:
+            properties:
+              elective:
+                description: Whether the capability is elective within this program
+                type: boolean
+              identifier:
+                description: Unique capability identifier. Matches the identifier returned by GET /api/v1/domains.
+                format: uuid
+                type: string
+              target_score:
+                description: The target score a learner is expected to reach for this capability
+                type: integer
+              title:
+                description: Capability title
+                type: string
+            required:
+            - identifier
+            - title
+            - elective
+            - target_score
+            type: object
+          type: array
+        due_date:
+          description: The due date of the program
+          format: date
+          type:
+          - string
+          - 'null'
+        identifier:
+          description: Unique program identifier
+          type: string
+        initiative_type:
+          description: The program's initiative type. `skills_evaluation` is the canonical high-stakes type; consumers decide which types they treat as high-stakes. Matches the `initiative_type` returned on scores and webhooks.
+          enum:
+          - skills_evaluation
+          - skills_growth
+          - benchmark
+          type: string
+        name:
+          description: Program name
+          type: string
+        start_date:
+          description: The start date of the program
+          format: date
+          type:
+          - string
+          - 'null'
+        status:
+          description: The status of the program
+          enum:
+          - DRAFT
+          - LIVE
+          - ARCHIVED
+          type: string
+        updated_at:
+          description: The timestamp when the program was last updated
+          format: date-time
+          type: string
+      required:
+      - identifier
+      - name
+      - initiative_type
+      - created_at
+      - updated_at
+      - status
+      - domains
+      title: ProgramResponse
+      type: object
+    ProgramListResponse:
+      description: Response schema for a list of programs
+      example:
+        data:
+        - created_at: '2024-01-01T01:01:01Z'
+          description: Comprehensive data science training program
+          domains:
+          - elective: false
+            identifier: 8b65714c-ba23-41bc-97bc-0305fdff53e5
+            target_score: 200
+            title: Supervised Learning Foundations
+          due_date: '2024-06-30'
+          identifier: e26dc707-6ec0-44d3-aee9-9b558ad5d77b
+          name: Data Science Bootcamp
+          start_date: '2024-01-01'
+          status: LIVE
+          updated_at: '2024-02-01T01:01:01Z'
+        has_more: false
+        next_page: null
+      properties:
+        data:
+          description: List of programs. String fields such as program and capability names are returned with HTML entities decoded.
+          items:
+            $ref: '#/components/schemas/ProgramResponse'
+          type: array
+        has_more:
+          description: indicates pagination can be used to retrieve more programs
+          type: boolean
+        next_page:
+          description: URL to the next page of the paginated programs
+          type:
+          - string
+          - 'null'
+      required:
+      - data
+      - has_more
+      - next_page
+      title: ProgramListResponse
+      type: object
+    ErrorResponse:
+      description: Response schema for all errors
+      example:
+        code: resource_missing
+        message: User not found
+        type: invalid_request_error
+      properties:
+        code:
+          description: Machine-readable error code
+          type: string
+        message:
+          description: Human-readable error message
+          type: string
+        type:
+          description: Category of error
+          type: string
+      title: ErrorResponse
+      type: object
+  securitySchemes:
+    authorization:
+      scheme: bearer
+      type: http

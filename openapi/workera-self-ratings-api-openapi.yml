@@ -1,0 +1,332 @@
+openapi: 3.2.0
+info:
+  description: '# API Documentation
+
+
+    _Hello and welcome to the Workera API!_
+
+
+    This documentation is designed to provide you with all the information you need to effectively integrate and interact with our services.'
+  title: Workera Self Ratings API
+  version: '1.0'
+servers:
+- url: https://skills.workera.ai
+  variables: {}
+security:
+- authorization: []
+tags:
+- name: Self Ratings
+paths:
+  /api/v2/self-ratings:
+    get:
+      callbacks: {}
+      description: 'Returns paginated self-assessment ratings across all users in the company.
+
+        Each rating includes the capability, score, and user with employee information.'
+      operationId: WorkeraWebappsWeb.Rest.Controllers.V2.SelfRatingsController.index
+      parameters:
+      - description: 'Cursor value for pagination. Returns results with `created_at` after this timestamp when order is `asc`, or before this timestamp when order is `desc`. Format: ISO 8601 datetime'
+        example: '2024-09-25T00:00:00Z'
+        in: query
+        name: next_page_after
+        required: false
+        schema:
+          type: string
+      - description: 'The number of results to return per page. Allowed values: `1` to `100` **Default**: `10`'
+        example: 10
+        in: query
+        name: limit
+        required: false
+        schema:
+          type: integer
+      - description: 'The order in which the result data is sorted by, using the `created_at` field. Allowed values: `asc`, `desc`. **Default**: `desc`'
+        example: asc
+        in: query
+        name: order
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/V2SelfRatingListResponse'
+          description: A list of self-ratings
+          headers:
+            x-ratelimit-limit:
+              description: The maximum amount of request within the rate limit window
+              example: 'x-ratelimit-limit: 100'
+              style: simple
+            x-ratelimit-remaining:
+              description: The remaining amount of request within the rate limit window
+              example: 'x-ratelimit-remaining: 10'
+              style: simple
+            x-ratelimit-reset:
+              description: The amount of seconds until the rate limit window resets and the remaining amount of requests is reset to the maximum amount of requests
+              example: 'x-ratelimit-reset: 10'
+              style: simple
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Request has to be authenticated to access this resource
+          headers:
+            x-ratelimit-limit:
+              description: The maximum amount of request within the rate limit window
+              example: 'x-ratelimit-limit: 100'
+              style: simple
+            x-ratelimit-remaining:
+              description: The remaining amount of request within the rate limit window
+              example: 'x-ratelimit-remaining: 10'
+              style: simple
+            x-ratelimit-reset:
+              description: The amount of seconds until the rate limit window resets and the remaining amount of requests is reset to the maximum amount of requests
+              example: 'x-ratelimit-reset: 10'
+              style: simple
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Request is not authorized to access this resource
+          headers:
+            x-ratelimit-limit:
+              description: The maximum amount of request within the rate limit window
+              example: 'x-ratelimit-limit: 100'
+              style: simple
+            x-ratelimit-remaining:
+              description: The remaining amount of request within the rate limit window
+              example: 'x-ratelimit-remaining: 10'
+              style: simple
+            x-ratelimit-reset:
+              description: The amount of seconds until the rate limit window resets and the remaining amount of requests is reset to the maximum amount of requests
+              example: 'x-ratelimit-reset: 10'
+              style: simple
+        '429':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Rate limit has been reached
+          headers:
+            x-ratelimit-limit:
+              description: The maximum amount of request within the rate limit window
+              example: 'x-ratelimit-limit: 100'
+              style: simple
+            x-ratelimit-remaining:
+              description: The remaining amount of request within the rate limit window
+              example: 'x-ratelimit-remaining: 0'
+              style: simple
+            x-ratelimit-reset:
+              description: The amount of seconds until the rate limit window resets and the remaining amount of requests is reset to the maximum amount of requests
+              example: 'x-ratelimit-reset: 10'
+              style: simple
+      summary: Get all self-ratings
+      tags:
+      - Self Ratings
+  /api/v2/self-ratings/{rating_identifier}:
+    get:
+      callbacks: {}
+      description: 'Returns a single self-assessment rating by its identifier, including the
+
+        capability, score, and user with employee information.'
+      operationId: WorkeraWebappsWeb.Rest.Controllers.V2.SelfRatingsController.show
+      parameters:
+      - description: Self-rating identifier
+        in: path
+        name: rating_identifier
+        required: true
+        schema:
+          format: uuid
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/V2SelfRatingResponse'
+          description: Self-rating detail
+          headers:
+            x-ratelimit-limit:
+              description: The maximum amount of request within the rate limit window
+              example: 'x-ratelimit-limit: 100'
+              style: simple
+            x-ratelimit-remaining:
+              description: The remaining amount of request within the rate limit window
+              example: 'x-ratelimit-remaining: 10'
+              style: simple
+            x-ratelimit-reset:
+              description: The amount of seconds until the rate limit window resets and the remaining amount of requests is reset to the maximum amount of requests
+              example: 'x-ratelimit-reset: 10'
+              style: simple
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Request has to be authenticated to access this resource
+          headers:
+            x-ratelimit-limit:
+              description: The maximum amount of request within the rate limit window
+              example: 'x-ratelimit-limit: 100'
+              style: simple
+            x-ratelimit-remaining:
+              description: The remaining amount of request within the rate limit window
+              example: 'x-ratelimit-remaining: 10'
+              style: simple
+            x-ratelimit-reset:
+              description: The amount of seconds until the rate limit window resets and the remaining amount of requests is reset to the maximum amount of requests
+              example: 'x-ratelimit-reset: 10'
+              style: simple
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Request is not authorized to access this resource
+          headers:
+            x-ratelimit-limit:
+              description: The maximum amount of request within the rate limit window
+              example: 'x-ratelimit-limit: 100'
+              style: simple
+            x-ratelimit-remaining:
+              description: The remaining amount of request within the rate limit window
+              example: 'x-ratelimit-remaining: 10'
+              style: simple
+            x-ratelimit-reset:
+              description: The amount of seconds until the rate limit window resets and the remaining amount of requests is reset to the maximum amount of requests
+              example: 'x-ratelimit-reset: 10'
+              style: simple
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Not found
+        '429':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Rate limit has been reached
+          headers:
+            x-ratelimit-limit:
+              description: The maximum amount of request within the rate limit window
+              example: 'x-ratelimit-limit: 100'
+              style: simple
+            x-ratelimit-remaining:
+              description: The remaining amount of request within the rate limit window
+              example: 'x-ratelimit-remaining: 0'
+              style: simple
+            x-ratelimit-reset:
+              description: The amount of seconds until the rate limit window resets and the remaining amount of requests is reset to the maximum amount of requests
+              example: 'x-ratelimit-reset: 10'
+              style: simple
+      summary: Get detailed self-rating
+      tags:
+      - Self Ratings
+components:
+  schemas:
+    V2SelfRatingListResponse:
+      description: Response schema for a paginated list of self-ratings
+      properties:
+        data:
+          description: List of self-ratings
+          items:
+            $ref: '#/components/schemas/V2SelfRatingResponse'
+          type: array
+        has_more:
+          description: Indicates more results are available
+          type: boolean
+        next_page:
+          description: URL to the next page of results
+          type:
+          - string
+          - 'null'
+      required:
+      - data
+      - has_more
+      - next_page
+      title: V2SelfRatingListResponse
+      type: object
+    V2SelfRatingResponse:
+      description: Response schema for a self-rating
+      properties:
+        created_at:
+          description: Creation timestamp
+          format: date-time
+          type: string
+        domain:
+          description: Capability information
+          properties:
+            identifier:
+              description: Unique capability identifier
+              type: string
+            name:
+              description: Capability name
+              type: string
+          required:
+          - identifier
+          - name
+          type: object
+        identifier:
+          description: Unique self-rating identifier
+          type: string
+        score:
+          description: Self-assessed score
+          type: integer
+        user:
+          description: User information
+          properties:
+            email:
+              description: User email
+              type: string
+            employee:
+              description: Employee information
+              properties:
+                identifier:
+                  description: Enterprise employee ID
+                  type: string
+              required:
+              - identifier
+              type: object
+            identifier:
+              description: Unique user identifier
+              type: string
+          required:
+          - identifier
+          - email
+          - employee
+          type: object
+      required:
+      - identifier
+      - score
+      - created_at
+      - domain
+      - user
+      title: V2SelfRatingResponse
+      type: object
+    ErrorResponse:
+      description: Response schema for all errors
+      example:
+        code: resource_missing
+        message: User not found
+        type: invalid_request_error
+      properties:
+        code:
+          description: Machine-readable error code
+          type: string
+        message:
+          description: Human-readable error message
+          type: string
+        type:
+          description: Category of error
+          type: string
+      title: ErrorResponse
+      type: object
+  securitySchemes:
+    authorization:
+      scheme: bearer
+      type: http

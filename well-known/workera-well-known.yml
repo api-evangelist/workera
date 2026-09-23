@@ -1,12 +1,17 @@
-generated: '2026-09-04'
+generated: '2026-09-19'
 method: probed
 source: live HTTP probes of every host in apis.yml and openapi servers[]
-note: >-
-  Six hosts probed against the named path list. Exactly one host serves real /.well-known documents:
-  skills.workera.ai, which publishes RFC 8414 OAuth authorization-server metadata and an RFC 9728
-  protected-resource document for its MCP server. docs.workera.ai and trust.workera.ai answer HTTP 200
-  on EVERY /.well-known/* path with an HTML shell (a Google IAP sign-in redirect and a Vanta SPA
-  respectively) — those are recorded as misses, not documents.
+note: 'Six hosts probed against the named path list. Exactly one host serves real /.well-known documents:
+  skills.workera.ai, which publishes RFC 8414 OAuth authorization-server metadata and an RFC 9728 protected-resource
+  document for its MCP server. docs.workera.ai and trust.workera.ai answer HTTP 200 on EVERY /.well-known/*
+  path with an HTML shell (a Google IAP sign-in redirect and a Vanta SPA respectively) — those are recorded
+  as misses, not documents.
+
+
+  MCP-host OAuth discovery added 2026-09-19 (roadmap#321/#337): the harvest visits a provider''s primary
+  hosts, and RFC 9728 protected-resource metadata lives on the MCP host, so these documents existed and
+  were invisible to the scorer. Fetched live and validated on `resource`/`issuer`; one negative control
+  per host.'
 hosts:
 - host: skills.workera.ai
   role: API host, application host, MCP host, OpenAPI servers[0]
@@ -37,6 +42,15 @@ hosts:
     status: 404
   - path: /.well-known/aauth-resource.json
     status: 404
+  - path: /.well-known/oauth-protected-resource
+    status: 200
+    file: workera-skills-oauth-protected-resource.json
+    bytes: 163
+  - path: /.well-known/oauth-authorization-server
+    status: 200
+    file: workera-skills-oauth-authorization-server.json
+    bytes: 588
+  path_echo_control: passed
 - host: www.workera.ai
   role: marketing site (Webflow), registrable domain www
   documents:
@@ -77,8 +91,7 @@ hosts:
     status: 404
 - host: docs.workera.ai
   role: internal documentation host
-  note: >-
-    Every path returns HTTP 200 with text/html because the host 302s to accounts.google.com sign-in
+  note: Every path returns HTTP 200 with text/html because the host 302s to accounts.google.com sign-in
     (Google IAP). No document is served; these are misses, not hits.
   documents:
   - path: /.well-known/security.txt
@@ -144,3 +157,15 @@ findings:
   api_catalog: not served on any host
   agent_card: not served on any host; no a2a/ artifact written
   oauth_metadata: served, and it is the discovery entry point for the MCP server
+x-mcp-probe:
+  probed: '2026-09-19'
+  issue: roadmap#321, roadmap#337
+  documents:
+  - host: https://skills.workera.ai
+    path: /.well-known/oauth-protected-resource
+    file: workera-skills-oauth-protected-resource.json
+  - host: https://skills.workera.ai
+    path: /.well-known/oauth-authorization-server
+    file: workera-skills-oauth-authorization-server.json
+  validated_on: resource (RFC 9728) / issuer (RFC 8414, OIDC)
+  negative_control: one per host; a 2xx JSON object at an impossible path discards the host

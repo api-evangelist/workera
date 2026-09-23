@@ -1,0 +1,42 @@
+{
+  "provider": "workera",
+  "sources": [
+    "_original/workera-api-openapi.json"
+  ],
+  "outputs": [
+    "workera-audit-events-api-openapi.yml",
+    "workera-benchmarks-api-openapi.yml",
+    "workera-capability-api-openapi.yml",
+    "workera-domains-api-openapi.yml",
+    "workera-ping-api-openapi.yml",
+    "workera-programs-api-openapi.yml",
+    "workera-scores-api-openapi.yml",
+    "workera-self-ratings-api-openapi.yml"
+  ],
+  "archived": [],
+  "errors": [],
+  "warnings": [],
+  "notes": [
+    "sourced from openapi/_original/ (1 archived document(s)); previously refined output at the top level was skipped rather than re-split",
+    "workera-api-openapi.json: upgraded openapi 3.0.0 -> OpenAPI 3.2.0",
+    "workera-api-openapi.json: declared missing tag: Audit Events",
+    "workera-api-openapi.json: declared missing tag: Benchmarks",
+    "workera-api-openapi.json: declared missing tag: Capability",
+    "workera-api-openapi.json: declared missing tag: Domains",
+    "workera-api-openapi.json: declared missing tag: Ping",
+    "workera-api-openapi.json: declared missing tag: Programs",
+    "workera-api-openapi.json: declared missing tag: Scores",
+    "workera-api-openapi.json: declared missing tag: Self Ratings",
+    "apis.yml register: already-registered"
+  ],
+  "skipped": [
+    "workera-audit-events-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "workera-benchmarks-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "workera-capability-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "workera-domains-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "workera-ping-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "workera-programs-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "workera-scores-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "workera-self-ratings-api-openapi.yml: previously refined output, superseded by openapi/_original/"
+  ]
+}
