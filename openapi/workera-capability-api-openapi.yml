@@ -295,6 +295,24 @@ paths:
       - Capability
 components:
   schemas:
+    ErrorResponse:
+      description: Response schema for all errors
+      example:
+        code: resource_missing
+        message: User not found
+        type: invalid_request_error
+      properties:
+        code:
+          description: Machine-readable error code
+          type: string
+        message:
+          description: Human-readable error message
+          type: string
+        type:
+          description: Category of error
+          type: string
+      title: ErrorResponse
+      type: object
     DomainResponse:
       description: Response schema for a capability
       example:
@@ -403,6 +421,49 @@ components:
       - sources
       title: DomainResponse
       type: object
+    DomainListResponse:
+      description: Response schema for a list of capabilities
+      example:
+        data:
+        - assessment_url: domain/8b65714c-ba23-41bc-97bc-0305fdff53e5
+          created_at: '2024-01-01T01:01:01Z'
+          description: In this sample capability, we will learn about...
+          identifier: 8b65714c-ba23-41bc-97bc-0305fdff53e5
+          industry: Cosmetics
+          is_shared: false
+          is_signature_domain: true
+          languages:
+          - en_US
+          - ger_DE
+          sources:
+          - id: 01945a0c-1234-7000-8000-000000000001
+            label: null
+            type: baseline
+          status: LIVE
+          title: A sample capability
+          updated_at: '2024-02-01T01:01:01Z'
+        has_more: false
+        next_page: null
+      properties:
+        data:
+          description: List of capabilities
+          items:
+            $ref: '#/components/schemas/DomainResponse'
+          type: array
+        has_more:
+          description: indicates pagination can be used to retrieve more capabilities
+          type: boolean
+        next_page:
+          description: URL to the next page of the paginated capabilities
+          type:
+          - string
+          - 'null'
+      required:
+      - data
+      - has_more
+      - next_page
+      title: DomainListResponse
+      type: object
     CompetencyModelExportResponse:
       description: 'The full competency model for a capability: capability → skill areas → skills → behaviors. Every node exposes only its identifier and name.'
       example:
@@ -480,67 +541,6 @@ components:
       - name
       - skill_areas
       title: CompetencyModelExportResponse
-      type: object
-    DomainListResponse:
-      description: Response schema for a list of capabilities
-      example:
-        data:
-        - assessment_url: domain/8b65714c-ba23-41bc-97bc-0305fdff53e5
-          created_at: '2024-01-01T01:01:01Z'
-          description: In this sample capability, we will learn about...
-          identifier: 8b65714c-ba23-41bc-97bc-0305fdff53e5
-          industry: Cosmetics
-          is_shared: false
-          is_signature_domain: true
-          languages:
-          - en_US
-          - ger_DE
-          sources:
-          - id: 01945a0c-1234-7000-8000-000000000001
-            label: null
-            type: baseline
-          status: LIVE
-          title: A sample capability
-          updated_at: '2024-02-01T01:01:01Z'
-        has_more: false
-        next_page: null
-      properties:
-        data:
-          description: List of capabilities
-          items:
-            $ref: '#/components/schemas/DomainResponse'
-          type: array
-        has_more:
-          description: indicates pagination can be used to retrieve more capabilities
-          type: boolean
-        next_page:
-          description: URL to the next page of the paginated capabilities
-          type:
-          - string
-          - 'null'
-      required:
-      - data
-      - has_more
-      - next_page
-      title: DomainListResponse
-      type: object
-    ErrorResponse:
-      description: Response schema for all errors
-      example:
-        code: resource_missing
-        message: User not found
-        type: invalid_request_error
-      properties:
-        code:
-          description: Machine-readable error code
-          type: string
-        message:
-          description: Human-readable error message
-          type: string
-        type:
-          description: Category of error
-          type: string
-      title: ErrorResponse
       type: object
   securitySchemes:
     authorization:

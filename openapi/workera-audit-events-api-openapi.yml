@@ -171,6 +171,24 @@ paths:
       - Audit Events
 components:
   schemas:
+    ErrorResponse:
+      description: Response schema for all errors
+      example:
+        code: resource_missing
+        message: User not found
+        type: invalid_request_error
+      properties:
+        code:
+          description: Machine-readable error code
+          type: string
+        message:
+          description: Human-readable error message
+          type: string
+        type:
+          description: Category of error
+          type: string
+      title: ErrorResponse
+      type: object
     AuditEvent:
       description: An audit event for enterprise security logging
       example:
@@ -266,24 +284,6 @@ components:
       - metadata
       - created_at
       title: AuditEvent
-      type: object
-    ErrorResponse:
-      description: Response schema for all errors
-      example:
-        code: resource_missing
-        message: User not found
-        type: invalid_request_error
-      properties:
-        code:
-          description: Machine-readable error code
-          type: string
-        message:
-          description: Human-readable error message
-          type: string
-        type:
-          description: Category of error
-          type: string
-      title: ErrorResponse
       type: object
     AuditEventListResponse:
       description: Response schema for a paginated list of audit events

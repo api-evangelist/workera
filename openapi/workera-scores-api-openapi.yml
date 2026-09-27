@@ -394,27 +394,23 @@ paths:
       - Scores
 components:
   schemas:
-    V2ScoreListResponse:
-      description: Response schema for a paginated list of assessment scores
+    ErrorResponse:
+      description: Response schema for all errors
+      example:
+        code: resource_missing
+        message: User not found
+        type: invalid_request_error
       properties:
-        data:
-          description: List of assessment scores
-          items:
-            $ref: '#/components/schemas/V2ScoreResponse'
-          type: array
-        has_more:
-          description: Indicates more results are available
-          type: boolean
-        next_page:
-          description: URL to the next page of results
-          type:
-          - string
-          - 'null'
-      required:
-      - data
-      - has_more
-      - next_page
-      title: V2ScoreListResponse
+        code:
+          description: Machine-readable error code
+          type: string
+        message:
+          description: Human-readable error message
+          type: string
+        type:
+          description: Category of error
+          type: string
+      title: ErrorResponse
       type: object
     V2ScoreResponse:
       description: Response schema for an assessment score
@@ -574,23 +570,27 @@ components:
       - user
       title: V2ScoreResponse
       type: object
-    ErrorResponse:
-      description: Response schema for all errors
-      example:
-        code: resource_missing
-        message: User not found
-        type: invalid_request_error
+    V2ScoreListResponse:
+      description: Response schema for a paginated list of assessment scores
       properties:
-        code:
-          description: Machine-readable error code
-          type: string
-        message:
-          description: Human-readable error message
-          type: string
-        type:
-          description: Category of error
-          type: string
-      title: ErrorResponse
+        data:
+          description: List of assessment scores
+          items:
+            $ref: '#/components/schemas/V2ScoreResponse'
+          type: array
+        has_more:
+          description: Indicates more results are available
+          type: boolean
+        next_page:
+          description: URL to the next page of results
+          type:
+          - string
+          - 'null'
+      required:
+      - data
+      - has_more
+      - next_page
+      title: V2ScoreListResponse
       type: object
   securitySchemes:
     authorization:
