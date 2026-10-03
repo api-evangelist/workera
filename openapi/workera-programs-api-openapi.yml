@@ -219,6 +219,45 @@ paths:
       - Programs
 components:
   schemas:
+    ProgramListResponse:
+      description: Response schema for a list of programs
+      example:
+        data:
+        - created_at: '2024-01-01T01:01:01Z'
+          description: Comprehensive data science training program
+          domains:
+          - elective: false
+            identifier: 8b65714c-ba23-41bc-97bc-0305fdff53e5
+            target_score: 200
+            title: Supervised Learning Foundations
+          due_date: '2024-06-30'
+          identifier: e26dc707-6ec0-44d3-aee9-9b558ad5d77b
+          name: Data Science Bootcamp
+          start_date: '2024-01-01'
+          status: LIVE
+          updated_at: '2024-02-01T01:01:01Z'
+        has_more: false
+        next_page: null
+      properties:
+        data:
+          description: List of programs. String fields such as program and capability names are returned with HTML entities decoded.
+          items:
+            $ref: '#/components/schemas/ProgramResponse'
+          type: array
+        has_more:
+          description: indicates pagination can be used to retrieve more programs
+          type: boolean
+        next_page:
+          description: URL to the next page of the paginated programs
+          type:
+          - string
+          - 'null'
+      required:
+      - data
+      - has_more
+      - next_page
+      title: ProgramListResponse
+      type: object
     ErrorResponse:
       description: Response schema for all errors
       example:
@@ -334,45 +373,6 @@ components:
       - status
       - domains
       title: ProgramResponse
-      type: object
-    ProgramListResponse:
-      description: Response schema for a list of programs
-      example:
-        data:
-        - created_at: '2024-01-01T01:01:01Z'
-          description: Comprehensive data science training program
-          domains:
-          - elective: false
-            identifier: 8b65714c-ba23-41bc-97bc-0305fdff53e5
-            target_score: 200
-            title: Supervised Learning Foundations
-          due_date: '2024-06-30'
-          identifier: e26dc707-6ec0-44d3-aee9-9b558ad5d77b
-          name: Data Science Bootcamp
-          start_date: '2024-01-01'
-          status: LIVE
-          updated_at: '2024-02-01T01:01:01Z'
-        has_more: false
-        next_page: null
-      properties:
-        data:
-          description: List of programs. String fields such as program and capability names are returned with HTML entities decoded.
-          items:
-            $ref: '#/components/schemas/ProgramResponse'
-          type: array
-        has_more:
-          description: indicates pagination can be used to retrieve more programs
-          type: boolean
-        next_page:
-          description: URL to the next page of the paginated programs
-          type:
-          - string
-          - 'null'
-      required:
-      - data
-      - has_more
-      - next_page
-      title: ProgramListResponse
       type: object
   securitySchemes:
     authorization:
