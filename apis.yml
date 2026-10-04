@@ -295,6 +295,9 @@ maintainers:
 - FN: APIs.json
   email: info@apis.io
 common:
+- type: CapabilityMap
+  url: capabilities/workera-capability-edges.yml
+  name: Workera Business Capability Map
 - type: Overlay
   url: overlays/workera-api-overlay.yaml
 - type: TrustCenter

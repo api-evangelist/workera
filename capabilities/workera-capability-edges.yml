@@ -1,0 +1,44 @@
+slug: workera
+provider: Workera
+generated_by: planning/capability-mapping/scripts/classify_capabilities.py
+model: claude-opus-5
+frame:
+- Software & Technology
+min_confidence: 0.7
+capability_model:
+  source: https://github.com/vincentmakes/turbo-ea-capabilities
+  license: CC-BY-4.0
+  attribution: Turbo EA Capabilities by Vincent Verdet — Turbo EA, https://github.com/vincentmakes/turbo-ea-capabilities,
+    CC BY 4.0
+  notice: NOTICE
+edge_count: 3
+edges:
+- tag: Self Ratings
+  spec_file: workera-self-ratings-api-openapi.yml
+  capability_id: BC-300
+  capability_id_l1: BC-300
+  capability_name: Human Capital Management
+  confidence: 0.72
+  evidence: GET /api/v2/self-ratings ... "Get all self-ratings"; vendor "measures, verifies and develops
+    workforce capability ... benchmark those verified scores against role requirements"
+  reason: Self-ratings are employee skill self-assessments within a skills-intelligence platform, a workforce
+    capability/HR process. Which sub-capability (L&D vs talent management vs workforce planning) is not
+    determinable from two read endpoints, so only the L1 is asserted.
+- tag: Programs
+  spec_file: workera-programs-api-openapi.yml
+  capability_id: BC-300.40
+  capability_id_l1: BC-300
+  capability_name: Learning & Development Management
+  confidence: 0.7
+  evidence: GET /api/v1/programs  Get all programs (including drafts)
+  reason: Programs on a skills-development platform are upskilling/learning programmes, supporting Learning
+    & Development Management.
+- tag: Scores
+  spec_file: workera-scores-api-openapi.yml
+  capability_id: BC-300.40
+  capability_id_l1: BC-300
+  capability_name: Learning & Development Management
+  confidence: 0.7
+  evidence: GET /api/v2/users/{user_identifier}/scores  Get scores for a user
+  reason: Per-user skill assessment scores from adaptive assessments; measurement of workforce capability
+    feeding learning and development.
