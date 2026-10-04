@@ -219,6 +219,24 @@ paths:
       - Programs
 components:
   schemas:
+    ErrorResponse:
+      description: Response schema for all errors
+      example:
+        code: resource_missing
+        message: User not found
+        type: invalid_request_error
+      properties:
+        code:
+          description: Machine-readable error code
+          type: string
+        message:
+          description: Human-readable error message
+          type: string
+        type:
+          description: Category of error
+          type: string
+      title: ErrorResponse
+      type: object
     ProgramListResponse:
       description: Response schema for a list of programs
       example:
@@ -257,24 +275,6 @@ components:
       - has_more
       - next_page
       title: ProgramListResponse
-      type: object
-    ErrorResponse:
-      description: Response schema for all errors
-      example:
-        code: resource_missing
-        message: User not found
-        type: invalid_request_error
-      properties:
-        code:
-          description: Machine-readable error code
-          type: string
-        message:
-          description: Human-readable error message
-          type: string
-        type:
-          description: Category of error
-          type: string
-      title: ErrorResponse
       type: object
     ProgramResponse:
       description: Response schema for a program

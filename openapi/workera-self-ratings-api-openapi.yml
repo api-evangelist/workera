@@ -229,6 +229,46 @@ paths:
       - Self Ratings
 components:
   schemas:
+    V2SelfRatingListResponse:
+      description: Response schema for a paginated list of self-ratings
+      properties:
+        data:
+          description: List of self-ratings
+          items:
+            $ref: '#/components/schemas/V2SelfRatingResponse'
+          type: array
+        has_more:
+          description: Indicates more results are available
+          type: boolean
+        next_page:
+          description: URL to the next page of results
+          type:
+          - string
+          - 'null'
+      required:
+      - data
+      - has_more
+      - next_page
+      title: V2SelfRatingListResponse
+      type: object
+    ErrorResponse:
+      description: Response schema for all errors
+      example:
+        code: resource_missing
+        message: User not found
+        type: invalid_request_error
+      properties:
+        code:
+          description: Machine-readable error code
+          type: string
+        message:
+          description: Human-readable error message
+          type: string
+        type:
+          description: Category of error
+          type: string
+      title: ErrorResponse
+      type: object
     V2SelfRatingResponse:
       description: Response schema for a self-rating
       properties:
@@ -285,46 +325,6 @@ components:
       - domain
       - user
       title: V2SelfRatingResponse
-      type: object
-    ErrorResponse:
-      description: Response schema for all errors
-      example:
-        code: resource_missing
-        message: User not found
-        type: invalid_request_error
-      properties:
-        code:
-          description: Machine-readable error code
-          type: string
-        message:
-          description: Human-readable error message
-          type: string
-        type:
-          description: Category of error
-          type: string
-      title: ErrorResponse
-      type: object
-    V2SelfRatingListResponse:
-      description: Response schema for a paginated list of self-ratings
-      properties:
-        data:
-          description: List of self-ratings
-          items:
-            $ref: '#/components/schemas/V2SelfRatingResponse'
-          type: array
-        has_more:
-          description: Indicates more results are available
-          type: boolean
-        next_page:
-          description: URL to the next page of results
-          type:
-          - string
-          - 'null'
-      required:
-      - data
-      - has_more
-      - next_page
-      title: V2SelfRatingListResponse
       type: object
   securitySchemes:
     authorization:

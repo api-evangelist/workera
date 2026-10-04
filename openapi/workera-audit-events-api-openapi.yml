@@ -171,64 +171,6 @@ paths:
       - Audit Events
 components:
   schemas:
-    ErrorResponse:
-      description: Response schema for all errors
-      example:
-        code: resource_missing
-        message: User not found
-        type: invalid_request_error
-      properties:
-        code:
-          description: Machine-readable error code
-          type: string
-        message:
-          description: Human-readable error message
-          type: string
-        type:
-          description: Category of error
-          type: string
-      title: ErrorResponse
-      type: object
-    AuditEventListResponse:
-      description: Response schema for a paginated list of audit events
-      example:
-        data:
-        - action: auth.login
-          actor_enterprise_id: EMP12345
-          actor_id: 462db21e-618d-4211-931a-9c5c43522e65
-          actor_type: user
-          created_at: '2026-01-10T14:30:00Z'
-          id: 01936e0a-1234-7000-8000-000000000001
-          location: 192.168.1.1
-          metadata: {}
-          request_id: FwK2X3Pg_qUABB4AAABI
-          session_id: abc123def456
-          targets:
-          - id: 462db21e-618d-4211-931a-9c5c43522e65
-            type: user
-          user_agent: Mozilla/5.0
-        has_more: false
-        next_page: null
-      properties:
-        data:
-          description: List of audit events
-          items:
-            $ref: '#/components/schemas/AuditEvent'
-          type: array
-        has_more:
-          description: Indicates if more events are available via pagination
-          type: boolean
-        next_page:
-          description: URL to the next page of results
-          type:
-          - string
-          - 'null'
-      required:
-      - data
-      - has_more
-      - next_page
-      title: AuditEventListResponse
-      type: object
     AuditEvent:
       description: An audit event for enterprise security logging
       example:
@@ -324,6 +266,64 @@ components:
       - metadata
       - created_at
       title: AuditEvent
+      type: object
+    ErrorResponse:
+      description: Response schema for all errors
+      example:
+        code: resource_missing
+        message: User not found
+        type: invalid_request_error
+      properties:
+        code:
+          description: Machine-readable error code
+          type: string
+        message:
+          description: Human-readable error message
+          type: string
+        type:
+          description: Category of error
+          type: string
+      title: ErrorResponse
+      type: object
+    AuditEventListResponse:
+      description: Response schema for a paginated list of audit events
+      example:
+        data:
+        - action: auth.login
+          actor_enterprise_id: EMP12345
+          actor_id: 462db21e-618d-4211-931a-9c5c43522e65
+          actor_type: user
+          created_at: '2026-01-10T14:30:00Z'
+          id: 01936e0a-1234-7000-8000-000000000001
+          location: 192.168.1.1
+          metadata: {}
+          request_id: FwK2X3Pg_qUABB4AAABI
+          session_id: abc123def456
+          targets:
+          - id: 462db21e-618d-4211-931a-9c5c43522e65
+            type: user
+          user_agent: Mozilla/5.0
+        has_more: false
+        next_page: null
+      properties:
+        data:
+          description: List of audit events
+          items:
+            $ref: '#/components/schemas/AuditEvent'
+          type: array
+        has_more:
+          description: Indicates if more events are available via pagination
+          type: boolean
+        next_page:
+          description: URL to the next page of results
+          type:
+          - string
+          - 'null'
+      required:
+      - data
+      - has_more
+      - next_page
+      title: AuditEventListResponse
       type: object
   securitySchemes:
     authorization:

@@ -289,6 +289,42 @@ paths:
       - Benchmarks
 components:
   schemas:
+    BenchmarkListResponse:
+      description: Response schema for a list of enterprise benchmark data
+      example:
+        data:
+        - big_tech_average_score: null
+          domain_identifier: 8b65714c-ba23-41bc-97bc-0305fdff53f5
+          enterprise_average_score: 166
+          enterprise_percentile_75_score: 182
+      properties:
+        data:
+          description: List of enterprise benchmark data
+          items:
+            $ref: '#/components/schemas/BenchmarkResponse'
+          type: array
+      required:
+      - data
+      title: BenchmarkListResponse
+      type: object
+    ErrorResponse:
+      description: Response schema for all errors
+      example:
+        code: resource_missing
+        message: User not found
+        type: invalid_request_error
+      properties:
+        code:
+          description: Machine-readable error code
+          type: string
+        message:
+          description: Human-readable error message
+          type: string
+        type:
+          description: Category of error
+          type: string
+      title: ErrorResponse
+      type: object
     BenchmarkResponse:
       description: Response schema for a benchmark item
       example:
@@ -318,42 +354,6 @@ components:
       required:
       - domain_identifier
       title: BenchmarkResponse
-      type: object
-    ErrorResponse:
-      description: Response schema for all errors
-      example:
-        code: resource_missing
-        message: User not found
-        type: invalid_request_error
-      properties:
-        code:
-          description: Machine-readable error code
-          type: string
-        message:
-          description: Human-readable error message
-          type: string
-        type:
-          description: Category of error
-          type: string
-      title: ErrorResponse
-      type: object
-    BenchmarkListResponse:
-      description: Response schema for a list of enterprise benchmark data
-      example:
-        data:
-        - big_tech_average_score: null
-          domain_identifier: 8b65714c-ba23-41bc-97bc-0305fdff53f5
-          enterprise_average_score: 166
-          enterprise_percentile_75_score: 182
-      properties:
-        data:
-          description: List of enterprise benchmark data
-          items:
-            $ref: '#/components/schemas/BenchmarkResponse'
-          type: array
-      required:
-      - data
-      title: BenchmarkListResponse
       type: object
   securitySchemes:
     authorization:
