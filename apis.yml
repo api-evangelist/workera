@@ -295,6 +295,8 @@ maintainers:
 - FN: APIs.json
   email: info@apis.io
 common:
+- type: RateLimits
+  url: rate-limits/workera-rate-limits.yml
 - type: CapabilityMap
   url: capabilities/workera-capability-edges.yml
   name: Workera Business Capability Map
