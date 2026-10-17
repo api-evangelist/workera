@@ -295,6 +295,114 @@ paths:
       - Capability
 components:
   schemas:
+    DomainResponse:
+      description: Response schema for a capability
+      example:
+        assessment_url: domain/8b65714c-ba23-41bc-97bc-0305fdff53e5
+        created_at: '2024-01-01T01:01:01Z'
+        description: In this sample domain, we will learn about...
+        identifier: 8b65714c-ba23-41bc-97bc-0305fdff53e5
+        industry: Cosmetics
+        is_shared: false
+        is_signature_domain: true
+        languages:
+        - en_US
+        - ger_DE
+        objectives: Objectives of the domain...
+        sources:
+        - id: 01945a0c-1234-7000-8000-000000000001
+          label: null
+          type: baseline
+        - id: 01945a0c-5678-7000-8000-000000000002
+          label: Q1 2025
+          type: reassessment
+        status: LIVE
+        title: A sample domain
+        updated_at: '2024-02-01T01:01:01Z'
+      properties:
+        assessment_url:
+          description: The target_url used for deeplinking to the assessment. Auto-enrolls the user into the capability
+          type: string
+        created_at:
+          description: The timestamp when the domain was created
+          format: date-time
+          type: string
+        description:
+          description: Capability description. Returned with HTML entities decoded.
+          type: string
+        identifier:
+          description: Unique capability identifier
+          type: string
+        industry:
+          description: The industry the domain was developed for
+          type: string
+        is_shared:
+          description: Indicates whether the capability is shared with the requesting company by another company
+          type: boolean
+        is_signature_domain:
+          description: Identifies Workera Signature Capabilities
+          type: boolean
+        languages:
+          description: List of languages this capability is translated to
+          items:
+            description: Language locale
+            type: string
+          type: array
+        objectives:
+          description: Capability objectives
+          type:
+          - string
+          - 'null'
+        sources:
+          description: List of assessment sources available for this domain
+          items:
+            properties:
+              id:
+                description: The domain template identifier
+                format: uuid
+                type: string
+              label:
+                description: Optional label for the assessment source
+                type:
+                - string
+                - 'null'
+              type:
+                description: The type of assessment source
+                enum:
+                - baseline
+                - reassessment
+                type: string
+            required:
+            - type
+            - id
+            type: object
+          type: array
+        status:
+          description: The status of the domain
+          enum:
+          - LIVE
+          - ARCHIVED
+          type: string
+        title:
+          description: Capability title. Returned with HTML entities decoded.
+          type: string
+        updated_at:
+          description: The timestamp when the domain was last updated
+          format: date-time
+          type: string
+      required:
+      - identifier
+      - title
+      - is_signature_domain
+      - is_shared
+      - languages
+      - assessment_url
+      - created_at
+      - updated_at
+      - status
+      - sources
+      title: DomainResponse
+      type: object
     DomainListResponse:
       description: Response schema for a list of capabilities
       example:
@@ -433,114 +541,6 @@ components:
       - name
       - skill_areas
       title: CompetencyModelExportResponse
-      type: object
-    DomainResponse:
-      description: Response schema for a capability
-      example:
-        assessment_url: domain/8b65714c-ba23-41bc-97bc-0305fdff53e5
-        created_at: '2024-01-01T01:01:01Z'
-        description: In this sample domain, we will learn about...
-        identifier: 8b65714c-ba23-41bc-97bc-0305fdff53e5
-        industry: Cosmetics
-        is_shared: false
-        is_signature_domain: true
-        languages:
-        - en_US
-        - ger_DE
-        objectives: Objectives of the domain...
-        sources:
-        - id: 01945a0c-1234-7000-8000-000000000001
-          label: null
-          type: baseline
-        - id: 01945a0c-5678-7000-8000-000000000002
-          label: Q1 2025
-          type: reassessment
-        status: LIVE
-        title: A sample domain
-        updated_at: '2024-02-01T01:01:01Z'
-      properties:
-        assessment_url:
-          description: The target_url used for deeplinking to the assessment. Auto-enrolls the user into the capability
-          type: string
-        created_at:
-          description: The timestamp when the domain was created
-          format: date-time
-          type: string
-        description:
-          description: Capability description. Returned with HTML entities decoded.
-          type: string
-        identifier:
-          description: Unique capability identifier
-          type: string
-        industry:
-          description: The industry the domain was developed for
-          type: string
-        is_shared:
-          description: Indicates whether the capability is shared with the requesting company by another company
-          type: boolean
-        is_signature_domain:
-          description: Identifies Workera Signature Capabilities
-          type: boolean
-        languages:
-          description: List of languages this capability is translated to
-          items:
-            description: Language locale
-            type: string
-          type: array
-        objectives:
-          description: Capability objectives
-          type:
-          - string
-          - 'null'
-        sources:
-          description: List of assessment sources available for this domain
-          items:
-            properties:
-              id:
-                description: The domain template identifier
-                format: uuid
-                type: string
-              label:
-                description: Optional label for the assessment source
-                type:
-                - string
-                - 'null'
-              type:
-                description: The type of assessment source
-                enum:
-                - baseline
-                - reassessment
-                type: string
-            required:
-            - type
-            - id
-            type: object
-          type: array
-        status:
-          description: The status of the domain
-          enum:
-          - LIVE
-          - ARCHIVED
-          type: string
-        title:
-          description: Capability title. Returned with HTML entities decoded.
-          type: string
-        updated_at:
-          description: The timestamp when the domain was last updated
-          format: date-time
-          type: string
-      required:
-      - identifier
-      - title
-      - is_signature_domain
-      - is_shared
-      - languages
-      - assessment_url
-      - created_at
-      - updated_at
-      - status
-      - sources
-      title: DomainResponse
       type: object
   securitySchemes:
     authorization:

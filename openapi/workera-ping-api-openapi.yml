@@ -104,17 +104,6 @@ paths:
       - Ping
 components:
   schemas:
-    PongResponse:
-      description: Response schema for a pong
-      example:
-        data:
-        - pong: true
-      properties:
-        pong:
-          description: Always true
-          type: boolean
-      title: PongResponse
-      type: object
     ErrorResponse:
       description: Response schema for all errors
       example:
@@ -132,6 +121,17 @@ components:
           description: Category of error
           type: string
       title: ErrorResponse
+      type: object
+    PongResponse:
+      description: Response schema for a pong
+      example:
+        data:
+        - pong: true
+      properties:
+        pong:
+          description: Always true
+          type: boolean
+      title: PongResponse
       type: object
   securitySchemes:
     authorization:
